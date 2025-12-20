@@ -1,0 +1,267 @@
+﻿/* ================= Global ================= */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&display=swap');
+
+:root {
+    --pink: #ff4fa3;
+    --dark: #1f1f1f;
+    --muted: #777;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    color: var(--dark);
+}
+
+/* ================= Navbar ================= */
+.glowry-navbar {
+    background: transparent !important;
+    border: none !important;
+}
+
+.glowry-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    color: var(--dark);
+    transition: color 0.3s ease;
+}
+
+    .glowry-brand:hover {
+        color: var(--pink);
+    }
+
+/* Nav links */
+.navbar-nav .nav-link {
+    color: var(--dark);
+    font-weight: 400;
+    position: relative;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+    /* Pink underline hover */
+    .navbar-nav .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 2px;
+        background: var(--pink);
+        transition: width 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: var(--pink);
+    }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+/* ================= Icons ================= */
+.glowry-icons a {
+    color: var(--dark);
+    font-size: 1.2rem;
+    margin-left: 18px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+    .glowry-icons a:hover {
+        color: var(--pink);
+        transform: translateY(-2px);
+    }
+
+/* Cart badge */
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: var(--pink);
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* ================= Page Content ================= */
+main {
+    background: transparent;
+}
+
+/* ================= Footer ================= */
+.glowry-footer {
+    background: transparent;
+    border: none;
+}
+
+    .glowry-footer h5 {
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px;
+    }
+
+    .glowry-footer p {
+        max-width: 420px;
+        margin: auto;
+    }
+
+.footer-links a {
+    color: var(--dark);
+    margin: 0 12px;
+    font-size: 0.9rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+    .footer-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 0;
+        height: 2px;
+        background: var(--pink);
+        transition: width 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: var(--pink);
+    }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+.glowry-icons i {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.glowry-icons a:hover i {
+    transform: scale(1.15);
+    color: var(--pink);
+}
+.glowry-icons a {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.glowry-icons i {
+    font-size: 1.4rem; /* اختاري الحجم اللي يعجبك */
+    line-height: 1;
+}
+
+
+/*---------------------------*/
+
+
+
+/* ================= Responsive ================= */
+
+/* ---------- Large screens (>=1200px) ---------- */
+@media (min-width: 1200px) {
+    .glowry-brand {
+        font-size: 2rem;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 0 12px;
+    }
+}
+
+/* ---------- Tablets (768px - 991px) ---------- */
+@media (max-width: 991px) {
+    .navbar-nav {
+        gap: 12px;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .glowry-icons {
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+        .glowry-icons a {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+    .glowry-brand {
+        font-size: 1.6rem;
+    }
+}
+
+/* ---------- Mobile (<=767px) ---------- */
+@media (max-width: 767px) {
+
+    /* Navbar */
+    .glowry-navbar {
+        padding: 10px 15px;
+    }
+
+    .glowry-brand {
+        font-size: 1.4rem;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 0.95rem;
+        padding: 8px 0;
+    }
+
+        .navbar-nav .nav-link::after {
+            display: none; /* underline بيبقى تقيل على الموبايل */
+        }
+
+    /* Icons */
+    .glowry-icons {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 12px;
+    }
+
+        .glowry-icons a {
+            width: 36px;
+            height: 36px;
+        }
+
+        .glowry-icons i {
+            font-size: 1.2rem;
+        }
+
+    /* Footer */
+    .glowry-footer p {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .footer-links a {
+            margin: 0;
+            font-size: 0.85rem;
+        }
+}
+
+/* ---------- Very small screens (<=480px) ---------- */
+@media (max-width: 480px) {
+    .glowry-brand {
+        font-size: 1.25rem;
+    }
+
+    .glowry-icons a {
+        width: 32px;
+        height: 32px;
+    }
+
+    .glowry-icons i {
+        font-size: 1.1rem;
+    }
+}

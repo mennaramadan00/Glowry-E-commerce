@@ -4,48 +4,104 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Glowry</title>
-    <script type="importmap"></script>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Glowry.styles.css" asp-append-version="true" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
 </head>
+
 <body>
+
+    <!-- ================= Navbar ================= -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Glowry</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg bg-white py-3">
+            <div class="container">
+
+                <!-- Logo -->
+                <a class="navbar-brand glowry-brand"
+                   asp-controller="Home" asp-action="Index">
+                    Glowry
+                </a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#glowryNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Links -->
+                <div class="collapse navbar-collapse justify-content-center" id="glowryNav">
+                    <ul class="navbar-nav gap-4">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Shop" asp-action="Index">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Products" asp-action="Skincare">Skincare</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Products" asp-action="Makeup">Makeup</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Products" asp-action="BestSellers">Best Sellers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
                 </div>
+
+                <!-- Icons -->
+                <div class="glowry-icons d-flex align-items-center">
+                    <a asp-controller="Search" asp-action="Index"><i class="bi bi-search"></i></a>
+                    @* <a asp-controller="Account" asp-action="Index"><i class="bi bi-person" ></i></a> *@
+                    <a asp-controller="Cart" asp-action="Index" class="position-relative">
+                        <i class="bi bi-cart"></i>
+                        @* <span class="cart-badge"></span> *@
+                    </a>
+                </div>
+
             </div>
         </nav>
     </header>
+
+    <!-- ================= Page Content ================= -->
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="py-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Glowry - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- ================= Footer ================= -->
+    <footer class="glowry-footer  mt-5">
+        <div class="container py-4 text-center">
+            <h5 class="mb-2">Glowry</h5>
+            <p class="text-muted small mb-2">
+                Discover your natural glow with our premium skincare & makeup.
+            </p>
+
+            <div class="footer-links mb-3">
+                <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <a asp-controller="Home" asp-action="About">About</a>
+                <a asp-controller="Home" asp-action="Contact">Contact</a>
+            </div>
+
+            <small class="text-muted">
+                © 2025 Glowry. All rights reserved.
+            </small>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- ================= Scripts ================= -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
