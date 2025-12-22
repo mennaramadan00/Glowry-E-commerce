@@ -1,5 +1,8 @@
 using Glowry.Data;
+using Glowry.Models;
+using Glowry.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -16,14 +19,24 @@ namespace Glowry
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //identity
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+            {   options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = false; 
+                options.Password.RequireUppercase =false; 
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            //esmail service 
+            builder.Services.AddTransient<IEmailSender, Glowry.Services.EmailSender>();
+
 
             var app = builder.Build();
 
             
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -34,6 +47,10 @@ namespace Glowry
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -46,6 +63,8 @@ namespace Glowry
                 .WithStaticAssets();
             app.MapRazorPages()
                .WithStaticAssets();
+
+            app.MapRazorPages();
 
             app.Run();
         }

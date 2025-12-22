@@ -1,0 +1,37 @@
+﻿@model List<Glowry.Models.Order>
+
+@{
+    ViewData["Title"] = "GetUserOrders";
+}
+
+<h1>GetUserOrders</h1>
+
+<div>
+    <h4>My Orders</h4>
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                <th>order id</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+               
+            @foreach (var order in Model)
+                {
+                   <tr>
+                   <td>
+                   <a asp-action="GetUserOrderDetails" asp-route-OrderId="@order.OrderId">
+                   @order.OrderId
+                   </a>
+                   </td>
+                   </tr> 
+                }
+
+              
+                   
+            
+        </tbody>
+    </table>
+</div>

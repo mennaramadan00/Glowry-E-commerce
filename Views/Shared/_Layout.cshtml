@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -38,33 +44,92 @@
                 <!-- Links -->
                 <div class="collapse navbar-collapse justify-content-center" id="glowryNav">
                     <ul class="navbar-nav gap-4">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Shop" asp-action="Index">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="Skincare">Skincare</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="Makeup">Makeup</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="BestSellers">Best Sellers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            //logged in
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Shop" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="Skincare">Shop</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="Makeup">Contact us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="BestSellers">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Orders" asp-action="GetUserOrders">My Orders</a>
+                            </li>
+
+
+
+                        }
+                        else
+                        {
+                            //not logged in
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Shop" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="Skincare">Shop</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="Makeup">Contact us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="BestSellers">About</a>
+                            </li>
+                            
+                        }
                     </ul>
                 </div>
 
                 <!-- Icons -->
-                <div class="glowry-icons d-flex align-items-center">
-                    <a asp-controller="Search" asp-action="Index"><i class="bi bi-search"></i></a>
-                    @* <a asp-controller="Account" asp-action="Index"><i class="bi bi-person" ></i></a> *@
+                <div class="glowry-icons d-flex align-items-center gap-3">
+
+                    @* <a asp-controller="Search" asp-action="Index">
+                        <i class="bi bi-search"></i>
+                    </a>
+
                     <a asp-controller="Cart" asp-action="Index" class="position-relative">
                         <i class="bi bi-cart"></i>
-                        @* <span class="cart-badge"></span> *@
-                    </a>
+                    </a> *@
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <!-- Logged in -->
+                        @* <span class="fw-semibold text-muted">
+                            Hello @User.Identity.Name
+                        </span> *@
+
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              method="post"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-link text-danger p-0">
+                                Logout
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- Not logged in -->
+                        <a asp-area="Identity"
+                           asp-page="/Account/Login"
+                           class="nav-link">
+                            Login
+                        </a>
+
+                        <a asp-area="Identity"
+                           asp-page="/Account/Register"
+                           class="nav-link">
+                            Register
+                        </a>
+                    }
                 </div>
+
 
             </div>
         </nav>
