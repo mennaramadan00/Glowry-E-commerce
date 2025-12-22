@@ -1,0 +1,114 @@
+﻿@model Glowry.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<div class="container mt-4">
+    <h1>Create New Category</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label for="categName" class="control-label">Category Name</label>
+                    <input type="text" name="categName" id="categName" class="form-control" placeholder="e.g., Dresses, Shoes, Accessories" required />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="categSlug" class="control-label">Category Slug</label>
+                    <input type="text" name="categSlug" id="categSlug" class="form-control" placeholder="e.g., dresses, shoes, accessories" required />
+                    <small class="form-text text-muted">URL-friendly version (lowercase, no spaces)</small>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="imageFile" class="control-label">Category Image</label>
+                    <input type="file" name="imageFile" id="imageFile" class="form-control-file" accept="image/*" />
+                    <small class="form-text text-muted">Optional: Upload an image to represent this category</small>
+                </div>
+
+                <div id="imagePreview" class="mb-3" style="display: none;">
+                    <label>Image Preview:</label>
+                    <img id="previewImg" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;" />
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Category
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-info-circle"></i> Category Tips
+                </div>
+                <div class="card-body">
+                    <h6>Naming Guidelines:</h6>
+                    <ul>
+                        <li>Use clear, descriptive names</li>
+                        <li>Keep names concise (2-3 words max)</li>
+                        <li>Use title case (e.g., "Women's Dresses")</li>
+                    </ul>
+                    <hr />
+                    <h6>Slug Guidelines:</h6>
+                    <ul>
+                        <li>Use lowercase letters only</li>
+                        <li>Replace spaces with hyphens (-)</li>
+                        <li>No special characters</li>
+                        <li>Example: "Women's Dresses" → "womens-dresses"</li>
+                    </ul>
+                    <hr />
+                    <h6>Image Guidelines:</h6>
+                    <ul>
+                        <li>Recommended size: 800x600 pixels</li>
+                        <li>Formats: JPG, PNG, GIF</li>
+                        <li>Max file size: 5MB</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Auto-generate slug from category name
+        document.getElementById('categName').addEventListener('input', function(e) {
+            var slug = e.target.value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('categSlug').value = slug;
+        });
+
+        // Image preview
+        document.getElementById('imageFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+            }
+        });
+    </script>
+}

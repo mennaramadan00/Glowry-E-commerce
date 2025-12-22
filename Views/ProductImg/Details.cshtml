@@ -1,0 +1,100 @@
+﻿@model Glowry.Models.ProductImg
+
+@{
+    ViewData["Title"] = "Image Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Image Details</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.ImgId" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            @if (Model.ProductId.HasValue)
+            {
+                <a asp-action="ManageImages" asp-controller="Product" asp-route-id="@Model.ProductId" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Image</h5>
+                </div>
+                <img src="@Url.Action("GetImage", "ProductImg", new { id = Model.ImgId })"
+                     alt="@Model.Alt"
+                     class="card-img-top"
+                     style="max-height: 500px; object-fit: contain; background: #f5f5f5;" />
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Image ID</dt>
+                        <dd class="col-sm-9">@Model.ImgId</dd>
+
+                        <dt class="col-sm-3">Product</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.Product != null)
+                            {
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.ProductId">
+                                    @Model.Product.ProName
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">General Image</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Alt Text</dt>
+                        <dd class="col-sm-9">@(Model.Alt ?? "None")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Option Mappings</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ImageMaps != null && Model.ImageMaps.Any())
+                    {
+                        <p>This image is mapped to <strong>@Model.ImageMaps.Count()</strong> option(s):</p>
+                        <ul class="list-group">
+                            @foreach (var map in Model.ImageMaps)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <strong>@map.ProductOption.AttributeName:</strong>
+                                        @map.ProductOption.AttributeValue
+                                    </span>
+                                    <a asp-controller="ProductOption"
+                                       asp-action="Details"
+                                       asp-route-id="@map.OptionId"
+                                       class="btn btn-sm btn-primary">
+                                        View
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">This image is not mapped to any options.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Glowry.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class layout : Migration
+    public partial class Second_Creation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,6 +259,34 @@ namespace Glowry.Data.Migrations
                 name: "IX_Cart_AppUserId",
                 table: "Carts",
                 newName: "IX_Carts_AppUserId");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "isdefault",
+                table: "ProductOptions",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsMain",
+                table: "ProductImgs",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "CreatedAt",
+                table: "Products",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<bool>(
+                name: "isfeatured",
+                table: "Products",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_WishlistItems",
@@ -572,6 +601,22 @@ namespace Glowry.Data.Migrations
             migrationBuilder.DropPrimaryKey(
                 name: "PK_CartItems",
                 table: "CartItems");
+
+            migrationBuilder.DropColumn(
+                name: "CreatedAt",
+                table: "Products");
+
+            migrationBuilder.DropColumn(
+                name: "isfeatured",
+                table: "Products");
+
+            migrationBuilder.DropColumn(
+                name: "isdefault",
+                table: "ProductOptions");
+
+            migrationBuilder.DropColumn(
+                name: "IsMain",
+                table: "ProductImgs");
 
             migrationBuilder.RenameTable(
                 name: "Wishlists",

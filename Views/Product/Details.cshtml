@@ -1,0 +1,198 @@
+﻿@model Glowry.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Product Details</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.ProId" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-box"></i> Product Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Product Name</dt>
+                        <dd class="col-sm-9">@Model.ProName</dd>
+
+                        <dt class="col-sm-3">Slug</dt>
+                        <dd class="col-sm-9"><code>@Model.ProSlug</code></dd>
+
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">@Model.ProDescription</dd>
+
+                        <dt class="col-sm-3">Price</dt>
+                        <dd class="col-sm-9"><strong class="text-success">$@Model.Price.ToString("F2")</strong></dd>
+
+                        <dt class="col-sm-3">Category</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge badge-info">@Model.Category?.CategName</span>
+                        </dd>
+
+                        <dt class="col-sm-3">Featured</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.isfeatured)
+                            {
+                                <span class="badge badge-success"><i class="fas fa-star"></i> Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-secondary">No</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Created At</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-images"></i> Product Images (@Model.ProductImages?.Count() ?? 0)</h5>
+                    <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="btn btn-sm btn-light">
+                        <i class="fas fa-cog"></i> Manage Images
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.ProductImages != null && Model.ProductImages.Any())
+                    {
+                        <div class="row">
+                            @foreach (var img in Model.ProductImages)
+                            {
+                                <div class="col-md-3 mb-3">
+                                    <img src="@Url.Action("GetImage", "ProductImg", new { id = img.ImgId })"
+                                         alt="@img.Alt"
+                                         class="img-fluid rounded border"
+                                         style="width: 100%; height: 150px; object-fit: cover;" />
+                                    <small class="text-muted d-block mt-1">@img.Alt</small>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">No images uploaded yet. <a asp-action="ManageImages" asp-route-id="@Model.ProId">Upload images</a></p>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-cog"></i> Product Options (@Model.ProductOptions?.Count() ?? 0)</h5>
+                    <a asp-action="ManageOptions" asp-route-id="@Model.ProId" class="btn btn-sm btn-light">
+                        <i class="fas fa-plus"></i> Manage Options
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.ProductOptions != null && Model.ProductOptions.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Value</th>
+                                        <th>Stock</th>
+                                        <th>Images</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var option in Model.ProductOptions)
+                                    {
+                                        <tr>
+                                            <td><strong>@option.AttributeName</strong></td>
+                                            <td>@option.AttributeValue</td>
+                                            <td>
+                                                @if (option.StockQuantity > 0)
+                                                {
+                                                    <span class="badge badge-success">@option.StockQuantity in stock</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">Out of stock</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (option.ImageMaps != null && option.ImageMaps.Any())
+                                                {
+                                                    <div class="d-flex">
+                                                        @foreach (var map in option.ImageMaps.Take(3))
+                                                        {
+                                                            <img src="@Url.Action("GetImage", "ProductImg", new { id = map.ImgId })"
+                                                                 alt=""
+                                                                 style="width: 40px; height: 40px; object-fit: cover; margin-right: 5px;"
+                                                                 class="rounded border" />
+                                                        }
+                                                        @if (option.ImageMaps.Count() > 3)
+                                                        {
+                                                            <span class="badge badge-secondary align-self-center">+@(option.ImageMaps.Count() - 3)</span>
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No images</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">No options created yet. <a asp-action="ManageOptions" asp-route-id="@Model.ProId">Create options</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-action="Edit" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
+                        <i class="fas fa-edit"></i> Edit Product Details
+                    </a>
+                    <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
+                        <i class="fas fa-images"></i> Manage Images
+                    </a>
+                    <a asp-action="ManageOptions" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog"></i> Manage Options
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-trash"></i> Delete Product
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Images:</strong> @(Model.ProductImages?.Count() ?? 0)</p>
+                    <p><strong>Total Options:</strong> @(Model.ProductOptions?.Count() ?? 0)</p>
+                    <p><strong>Total Stock:</strong> @(Model.ProductOptions?.Sum(o => o.StockQuantity) ?? 0) units</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

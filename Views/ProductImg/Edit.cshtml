@@ -1,0 +1,119 @@
+﻿@model Glowry.Models.ProductImg
+
+@{
+    ViewData["Title"] = "Edit Product Image";
+}
+
+<div class="container mt-4">
+    <h1>Edit Product Image</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="id" value="@Model.ImgId" />
+
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <div>
+                        <img src="@Url.Action("GetImage", "ProductImg", new { id = Model.ImgId })"
+                             alt="@Model.Alt"
+                             class="img-fluid rounded border mb-3"
+                             style="max-height: 300px;" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Replace Image (optional)</label>
+                    <input type="file"
+                           name="imageFile"
+                           class="form-control-file"
+                           accept="image/*"
+                           id="imageInput" />
+                    <small class="form-text text-muted">Leave empty to keep current image</small>
+                </div>
+
+                <div id="imagePreview" class="mb-3" style="display: none;">
+                    <label>New Image Preview:</label>
+                    <img id="previewImg" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;" />
+                </div>
+
+                <div class="form-group">
+                    <label>Alt Text</label>
+                    <input type="text"
+                           name="alt"
+                           value="@Model.Alt"
+                           class="form-control"
+                           placeholder="Image description" />
+                </div>
+
+                <div class="form-group">
+                    <label>Product (optional)</label>
+                    <select name="productId" class="form-control" asp-items="ViewBag.ProductId">
+                        <option value="">-- No specific product --</option>
+                    </select>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    @if (Model.ProductId.HasValue)
+                    {
+                        <a asp-action="ManageImages" asp-controller="Product" asp-route-id="@Model.ProductId" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Image Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Image ID:</strong> @Model.ImgId</p>
+                    <p><strong>Product:</strong> @(Model.Product?.ProName ?? "General Image")</p>
+                    <p><strong>Alt Text:</strong> @(Model.Alt ?? "None")</p>
+
+                    @if (Model.ImageMaps != null && Model.ImageMaps.Any())
+                    {
+                        <hr />
+                        <h6>Mapped to Options:</h6>
+                        <ul>
+                            @foreach (var map in Model.ImageMaps)
+                            {
+                                <li>@map.ProductOption.AttributeName: @map.ProductOption.AttributeValue</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

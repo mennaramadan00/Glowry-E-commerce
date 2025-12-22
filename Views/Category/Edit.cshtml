@@ -1,0 +1,126 @@
+﻿<!-- Category/Edit.cshtml -->
+@model Glowry.Models.Category
+
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="container mt-4">
+    <h1>Edit Category</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="id" value="@Model.CategoryId" />
+
+                <div class="form-group">
+                    <label for="categName" class="control-label">Category Name</label>
+                    <input type="text" name="categName" id="categName" value="@Model.CategName" class="form-control" required />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="categSlug" class="control-label">Category Slug</label>
+                    <input type="text" name="categSlug" id="categSlug" value="@Model.CategSlug" class="form-control" required />
+                    <small class="form-text text-muted">URL-friendly version (lowercase, no spaces)</small>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Image</label>
+                    @if (Model.Img != null)
+                    {
+                        <div class="mb-2">
+                            <img src="@Url.Action("GetImage", "Category", new { id = Model.CategoryId })"
+                                 alt="@Model.CategName"
+                                 class="img-fluid rounded border"
+                                 style="max-height: 200px;" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No image uploaded</p>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="imageFile" class="control-label">Replace Image (Optional)</label>
+                    <input type="file" name="imageFile" id="imageFile" class="form-control-file" accept="image/*" />
+                    <small class="form-text text-muted">Leave empty to keep current image</small>
+                </div>
+
+                <div id="imagePreview" class="mb-3" style="display: none;">
+                    <label>New Image Preview:</label>
+                    <img id="previewImg" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;" />
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Details" asp-route-id="@Model.CategoryId" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-chart-bar"></i> Category Statistics
+                </div>
+                <div class="card-body">
+                    <p><strong>Category ID:</strong> @Model.CategoryId</p>
+                    <p><strong>Products in Category:</strong> @(Model.Products?.Count() ?? 0)</p>
+                    <p><strong>Has Image:</strong> @(Model.Img != null ? "Yes" : "No")</p>
+
+                    @if (Model.Products != null && Model.Products.Any())
+                    {
+                        <hr />
+                        <h6>Associated Products:</h6>
+                        <ul class="list-unstyled">
+                            @foreach (var product in Model.Products.Take(5))
+                            {
+                                <li>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProId">
+                                        @product.ProName
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.Products.Count() > 5)
+                            {
+                                <li class="text-muted">... and @(Model.Products.Count() - 5) more</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Image preview
+        document.getElementById('imageFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+            }
+        });
+    </script>
+}

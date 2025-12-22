@@ -44,6 +44,26 @@ namespace Glowry
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{controller=Product}/{action=Index}/{id?}")
+                .WithStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{controller=ImageMap}/{action=Index}/{id?}")
+                .WithStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{controller=ProductImg}/{action=Index}/{id?}")
+                .WithStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{controller=ProductOption}/{action=Index}/{id?}")
+                .WithStaticAssets();
+            app.MapControllerRoute(
+            name: "areas",
+                pattern: "{controller=Category}/{action=Index}/{id?}")
+                .WithStaticAssets();
             app.MapRazorPages()
                .WithStaticAssets();
 
