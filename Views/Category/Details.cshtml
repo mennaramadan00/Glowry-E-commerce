@@ -1,0 +1,181 @@
+﻿<!-- Category/Details.cshtml -->
+@model Glowry.Models.Category
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Category Details</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-folder"></i> Category Image</h5>
+                </div>
+                @if (Model.Img != null)
+                {
+                    <img src="@Url.Action("GetImage", "Category", new { id = Model.CategoryId })"
+                         alt="@Model.CategName"
+                         class="card-img-top"
+                         style="max-height: 300px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div style="height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-folder fa-5x text-white opacity-50"></i>
+                    </div>
+                }
+                <div class="card-body">
+                    <h4 class="card-title">@Model.CategName</h4>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-link"></i> <code>@Model.CategSlug</code>
+                        </small>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6">Category ID:</dt>
+                        <dd class="col-sm-6">@Model.CategoryId</dd>
+
+                        <dt class="col-sm-6">Total Products:</dt>
+                        <dd class="col-sm-6">
+                            <span class="badge badge-primary badge-pill">@(Model.Products?.Count() ?? 0)</span>
+                        </dd>
+
+                        <dt class="col-sm-6">Has Image:</dt>
+                        <dd class="col-sm-6">
+                            @if (Model.Img != null)
+                            {
+                                <span class="badge badge-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-secondary">No</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6">Featured Products:</dt>
+                        <dd class="col-sm-6">
+                            <span class="badge badge-warning badge-pill">
+                                @(Model.Products?.Count(p => p.isfeatured) ?? 0)
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-box"></i> Products in this Category (@(Model.Products?.Count() ?? 0))</h5>
+                    <a asp-controller="Product" asp-action="Create" class="btn btn-sm btn-light">
+                        <i class="fas fa-plus"></i> Add Product
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.Products != null && Model.Products.Any())
+                    {
+                        <div class="row">
+                            @foreach (var product in Model.Products)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-secondary">
+                                        <div class="row no-gutters">
+                                            <div class="col-4">
+                                                @if (product.ProductImages != null && product.ProductImages.Any())
+                                                {
+                                                    <img src="@Url.Action("GetImage", "ProductImg", new { id = product.ProductImages.First().ImgId })"
+                                                         alt="@product.ProName"
+                                                         style="width: 100%; height: 120px; object-fit: cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <div style="width: 100%; height: 120px; background: #ddd; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="fas fa-image text-muted"></i>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-body p-2">
+                                                    <h6 class="card-title mb-1 text-truncate" title="@product.ProName">
+                                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProId">
+                                                            @product.ProName
+                                                        </a>
+                                                    </h6>
+                                                    <p class="card-text small mb-1">
+                                                        <strong class="text-success">$@product.Price.ToString("F2")</strong>
+                                                    </p>
+                                                    <p class="card-text small mb-1">
+                                                        @if (product.isfeatured)
+                                                        {
+                                                            <span class="badge badge-warning badge-sm">
+                                                                <i class="fas fa-star"></i> Featured
+                                                            </span>
+                                                        }
+                                                    </p>
+                                                    <p class="card-text small text-muted mb-0">
+                                                        <i class="fas fa-cog"></i> @(product.ProductOptions?.Count() ?? 0) options
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i> No products in this category yet.
+                            <hr />
+                            <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create First Product
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-action="Edit" asp-route-id="@Model.CategoryId" class="list-group-item list-group-item-action">
+                        <i class="fas fa-edit"></i> Edit Category Details
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@Model.CategoryId" class="list-group-item list-group-item-action">
+                        <i class="fas fa-filter"></i> View All Products in Category
+                    </a>
+                    <a asp-controller="Product" asp-action="Create" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus"></i> Add New Product to Category
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.CategoryId" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-trash"></i> Delete Category
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

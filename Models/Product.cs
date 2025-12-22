@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Glowry.Models
@@ -23,14 +24,27 @@ namespace Glowry.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public bool isfeatured { get; set; } = false;
+
+
 
 
         //fk
-    
+
         [Required]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         // Navigation property
+        [ValidateNever]
         public Category Category { get; set; }
+        [ValidateNever]
+        public ICollection<ProductImg> ProductImages { get; set; }
+        [ValidateNever]
+        public ICollection<ProductOption> ProductOptions { get; set; }
+
+
+
     }
 }

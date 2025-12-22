@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Glowry.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251220172254_layout")]
-    partial class layout
+    [Migration("20251220124926_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,7 +128,7 @@ namespace Glowry.Data.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("Glowry.Models.CartItem", b =>
@@ -154,7 +154,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("Glowry.Models.Category", b =>
@@ -181,7 +181,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasKey("CategId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Glowry.Models.ImageMap", b =>
@@ -204,7 +204,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("ImageMaps");
+                    b.ToTable("ImageMap");
                 });
 
             modelBuilder.Entity("Glowry.Models.Order", b =>
@@ -236,7 +236,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Glowry.Models.OrderItem", b =>
@@ -265,7 +265,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("ProductOptionId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Glowry.Models.Product", b =>
@@ -301,7 +301,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Glowry.Models.ProductImg", b =>
@@ -328,7 +328,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImgs");
+                    b.ToTable("ProductImg");
                 });
 
             modelBuilder.Entity("Glowry.Models.ProductOption", b =>
@@ -359,7 +359,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("ProId");
 
-                    b.ToTable("ProductOptions");
+                    b.ToTable("ProductOption");
                 });
 
             modelBuilder.Entity("Glowry.Models.Review", b =>
@@ -393,7 +393,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Glowry.Models.WishList", b =>
@@ -412,7 +412,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("WishList");
                 });
 
             modelBuilder.Entity("Glowry.Models.WishListItem", b =>
@@ -435,7 +435,7 @@ namespace Glowry.Data.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishListItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

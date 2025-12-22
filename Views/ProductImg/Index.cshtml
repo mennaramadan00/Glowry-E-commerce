@@ -1,0 +1,429 @@
+﻿<!-- ImageMap/Index.cshtml -->
+@model IEnumerable<Glowry.Models.ImageMap>
+
+@{
+    ViewData["Title"] = "Image Mappings";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Image Mappings</h1>
+            <p class="text-muted mb-0">Connections between product images and variant options</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Mapping
+        </a>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="form-row">
+                <div class="col-md-4 mb-2">
+                    <label class="small font-weight-bold">Filter by Product:</label>
+                    <select name="productId" class="form-control" onchange="this.form.submit()">
+                      
+          
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="small font-weight-bold">Filter by Attribute:</label>
+                    <select name="attributeName" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Attributes</option>
+
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="small font-weight-bold">View Mode:</label>
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-secondary active" onclick="switchView('grid')">
+                            <i class="fas fa-th"></i> Grid
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="switchView('table')">
+                            <i class="fas fa-table"></i> Table
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="small font-weight-bold">&nbsp;</label>
+                    <a asp-action="Index" class="btn btn-secondary btn-block">
+                        <i class="fas fa-redo"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <!-- Grid View -->
+        <div id="gridView">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100 shadow-sm border-primary">
+                            <div class="card-header bg-primary text-white p-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="font-weight-bold">
+                                        <i class="fas fa-link"></i> Mapping #@item.ImgMapId
+                                    </small>
+                                    <form asp-action="Delete" method="post" style="display: inline;" 
+                                          onsubmit="return confirm('Remove this mapping?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.ImgMapId" />
+                                        <button type="submit" class="btn btn-sm btn-danger p-1" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <img src="@Url.Action("GetImage", "ProductImg", new { id = item.ImgId })" 
+                                 alt="@item.ProductImg?.Alt" 
+                                 class="card-img-top" 
+                                 style="height: 180px; object-fit: cover; cursor: pointer;"
+                                 onclick="openImageModal(@item.ImgId, '@item.ProductImg?.Alt')" />
+                            
+                            <div class="card-body p-3">
+                                <div class="mb-2">
+                                    <small class="text-muted d-block">Product:</small>
+                                    <strong class="d-block text-truncate" title="@item.ProductImg?.Product?.ProName">
+                                        <a asp-controller="Product" 
+                                           asp-action="Details" 
+                                           asp-route-id="@item.ProductImg?.ProductId">
+                                            @item.ProductImg?.Product?.ProName
+                                        </a>
+                                    </strong>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <small class="text-muted d-block">Option:</small>
+                                    <div>
+                                        <span class="badge badge-info">@item.ProductOption?.AttributeName</span>
+                                        <strong>@item.ProductOption?.AttributeValue</strong>
+                                    </div>
+                                </div>
+
+                                @if (item.ProductOption?.StockQuantity != null)
+                                {
+                                    <div class="mb-2">
+                                        <small class="text-muted d-block">Stock:</small>
+                                        @if (item.ProductOption.StockQuantity > 0)
+                                        {
+                                            <span class="badge badge-success">
+                                                @item.ProductOption.StockQuantity units
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Out of stock</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="card-footer bg-white p-2">
+                                <div class="btn-group btn-group-sm w-100" role="group">
+                                    <a asp-action="Details" 
+                                       asp-route-id="@item.ImgMapId" 
+                                       class="btn btn-outline-info">
+                                        <i class="fas fa-eye"></i> Details
+                                    </a>
+                                    <a asp-controller="ProductOption" 
+                                       asp-action="MapImages" 
+                                       asp-route-id="@item.OptionId" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-cog"></i> Manage
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="tableView" style="display: none;">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th style="width: 80px;">ID</th>
+                                    <th style="width: 120px;">Image</th>
+                                    <th>Product</th>
+                                    <th>Attribute</th>
+                                    <th>Value</th>
+                                    <th>Stock</th>
+                                    <th style="width: 150px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <span class="badge badge-secondary">#@item.ImgMapId</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <img src="@Url.Action("GetImage", "ProductImg", new { id = item.ImgId })" 
+                                                 alt="@item.ProductImg?.Alt" 
+                                                 style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" 
+                                                 class="rounded border"
+                                                 onclick="openImageModal(@item.ImgId, '@item.ProductImg?.Alt')" />
+                                        </td>
+                                        <td class="align-middle">
+                                            <a asp-controller="Product" 
+                                               asp-action="Details" 
+                                               asp-route-id="@item.ProductImg?.ProductId">
+                                                <strong>@item.ProductImg?.Product?.ProName</strong>
+                                            </a>
+                                            <br />
+                                            <small class="text-muted">@item.ProductImg?.Alt</small>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge badge-info">@item.ProductOption?.AttributeName</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <strong>@item.ProductOption?.AttributeValue</strong>
+                                        </td>
+                                        <td class="align-middle">
+                                            @if (item.ProductOption?.StockQuantity > 10)
+                                            {
+                                                <span class="badge badge-success badge-pill">
+                                                    @item.ProductOption.StockQuantity
+                                                </span>
+                                            }
+                                            else if (item.ProductOption?.StockQuantity > 0)
+                                            {
+                                                <span class="badge badge-warning badge-pill">
+                                                    @item.ProductOption.StockQuantity
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger badge-pill">Out</span>
+                                            }
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="btn-group" role="group">
+                                                <a asp-action="Details" 
+                                                   asp-route-id="@item.ImgMapId" 
+                                                   class="btn btn-sm btn-info"
+                                                   title="Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-controller="ProductOption" 
+                                                   asp-action="MapImages" 
+                                                   asp-route-id="@item.OptionId" 
+                                                   class="btn btn-sm btn-primary"
+                                                   title="Manage Mappings">
+                                                    <i class="fas fa-cog"></i>
+                                                </a>
+                                                <form asp-action="Delete" method="post" style="display: inline;"
+                                                      onsubmit="return confirm('Remove this mapping?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.ImgMapId" />
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Count()</h2>
+                        <p class="mb-0">Total Mappings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Select(m => m.ProductImg?.ProductId).Distinct().Count()</h2>
+                        <p class="mb-0">Products</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Select(m => m.ImgId).Distinct().Count()</h2>
+                        <p class="mb-0">Unique Images</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Select(m => m.OptionId).Distinct().Count()</h2>
+                        <p class="mb-0">Mapped Options</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grouped View by Product -->
+        <div class="card mt-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-sitemap"></i> Mappings by Product</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var productGroup in Model.GroupBy(m => m.ProductImg?.Product))
+                {
+                    if (productGroup.Key != null)
+                    {
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@productGroup.Key.ProId">
+                                    <i class="fas fa-box"></i> @productGroup.Key.ProName
+                                </a>
+                                <span class="badge badge-primary ml-2">@productGroup.Count() mappings</span>
+                            </h5>
+                            
+                            <div class="row">
+                                @foreach (var optionGroup in productGroup.GroupBy(m => m.ProductOption))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border-info">
+                                            <div class="card-header bg-info text-white p-2">
+                                                <strong>@optionGroup.Key?.AttributeName:</strong> @optionGroup.Key?.AttributeValue
+                                                <span class="badge badge-light ml-2">@optionGroup.Count() image(s)</span>
+                                            </div>
+                                            <div class="card-body p-2">
+                                                <div class="d-flex flex-wrap">
+                                                    @foreach (var mapping in optionGroup)
+                                                    {
+                                                        <div class="position-relative mr-2 mb-2">
+                                                            <img src="@Url.Action("GetImage", "ProductImg", new { id = mapping.ImgId })" 
+                                                                 alt="" 
+                                                                 style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;" 
+                                                                 class="rounded border"
+                                                                 onclick="openImageModal(@mapping.ImgId, '@mapping.ProductImg?.Alt')" />
+                                                            <form asp-action="Delete" method="post" 
+                                                                  style="position: absolute; top: 2px; right: 2px;"
+                                                                  onsubmit="return confirm('Remove?');">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="id" value="@mapping.ImgMapId" />
+                                                                <button type="submit" class="btn btn-danger btn-sm p-1" style="font-size: 10px;">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-link fa-4x text-muted mb-3"></i>
+                <h4>No Image Mappings Found</h4>
+                <p class="text-muted">Image mappings connect product images to specific variant options (like colors or sizes).</p>
+                <div class="mt-4">
+                    <a asp-action="Create" class="btn btn-primary btn-lg mr-2">
+                        <i class="fas fa-plus"></i> Create Mapping
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-box"></i> View Products
+                    </a>
+                </div>
+                
+                <div class="card mt-4 mx-auto" style="max-width: 600px;">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-lightbulb"></i> How It Works
+                    </div>
+                    <div class="card-body text-left">
+                        <ol>
+                            <li>Create a product with multiple options (e.g., Red, Blue, Green colors)</li>
+                            <li>Upload images showing each variant</li>
+                            <li>Map the red product photo to the "Red" option</li>
+                            <li>Customers see the correct image when selecting that option</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle">Image Preview</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center bg-light">
+                <img id="imageModalImg" src="" alt="" class="img-fluid" style="max-height: 70vh;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function switchView(view) {
+            const gridView = document.getElementById('gridView');
+            const tableView = document.getElementById('tableView');
+            const buttons = document.querySelectorAll('[onclick^="switchView"]');
+            
+            if (view === 'grid') {
+                gridView.style.display = 'block';
+                tableView.style.display = 'none';
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+                localStorage.setItem('imageMappingView', 'grid');
+            } else {
+                gridView.style.display = 'none';
+                tableView.style.display = 'block';
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+                localStorage.setItem('imageMappingView', 'table');
+            }
+        }
+
+        function openImageModal(imgId, alt) {
+            document.getElementById('imageModalTitle').textContent = alt || 'Image Preview';
+            document.getElementById('imageModalImg').src = '@Url.Action("GetImage", "ProductImg")?id=' + imgId;
+            $('#imageModal').modal('show');
+        }
+
+        // Remember view preference
+        window.onload = function() {
+            const savedView = localStorage.getItem('imageMappingView');
+            if (savedView === 'table') {
+                switchView('table');
+            }
+        };
+    </script>
+}

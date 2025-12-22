@@ -5,7 +5,7 @@ namespace Glowry.Models
     public class Category
     {
         [Key]
-        public int CategId { get; set; }
+        public int CategoryId { get; set; }
 
         public byte[] Img { get; set; }
 

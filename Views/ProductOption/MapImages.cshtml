@@ -1,0 +1,199 @@
+﻿@model Glowry.Models.ProductOption
+
+@{
+    ViewData["Title"] = "Map Images to Option";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Map Images to Option</h1>
+            <p class="text-muted">
+                Product: <strong>@Model.Product.ProName</strong> |
+                Option: <strong>@Model.AttributeName - @Model.AttributeValue</strong>
+            </p>
+        </div>
+        <div>
+            <a asp-action="ManageOptions" asp-controller="Product" asp-route-id="@Model.ProId" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Options
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-check"></i> Currently Mapped Images (@Model.ImageMaps?.Count() ?? 0)</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ImageMaps != null && Model.ImageMaps.Any())
+                    {
+                        <div class="row">
+                            @foreach (var map in Model.ImageMaps)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <img src="@Url.Action("GetImage", "ProductImg", new { id = map.ProductImg.ImgId })"
+                                             alt="@map.ProductImg.Alt"
+                                             class="card-img-top"
+                                             style="height: 150px; object-fit: cover;" />
+                                        <div class="card-body p-2">
+                                            <p class="card-text small mb-2">@map.ProductImg.Alt</p>
+                                            <form asp-controller="ImageMap"
+                                                  asp-action="DeleteByIds"
+                                                  method="post"
+                                                  class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="optionId" value="@Model.OptionId" />
+                                                <input type="hidden" name="imageId" value="@map.ProductImg.ImgId" />
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger btn-block"
+                                                        onclick="return confirm('Remove this image mapping?');">
+                                                    <i class="fas fa-unlink"></i> Unmap
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <form asp-controller="ImageMap"
+                              asp-action="DeleteAllForOption"
+                              method="post"
+                              class="mt-3">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="optionId" value="@Model.OptionId" />
+                            <button type="submit"
+                                    class="btn btn-warning btn-block"
+                                    onclick="return confirm('Remove ALL image mappings for this option?');">
+                                <i class="fas fa-trash"></i> Remove All Mappings
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i> No images mapped to this option yet.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus"></i> Available Product Images</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.AvailableImages != null && ((List<Glowry.Models.ProductImg>)ViewBag.AvailableImages).Any())
+                    {
+                        <form asp-controller="ImageMap"
+                              asp-action="CreateMultiple"
+                              method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="optionId" value="@Model.OptionId" />
+
+                            <p class="text-muted">Select images to map to this option:</p>
+
+                            <div class="row">
+                                @foreach (var img in (List<Glowry.Models.ProductImg>)ViewBag.AvailableImages)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border-primary">
+                                            <img src="@Url.Action("GetImage", "ProductImg", new { id = img.ImgId })"
+                                                 alt="@img.Alt"
+                                                 class="card-img-top"
+                                                 style="height: 150px; object-fit: cover;" />
+                                            <div class="card-body p-2">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox"
+                                                           class="custom-control-input"
+                                                           name="imageIds"
+                                                           value="@img.ImgId"
+                                                           id="img_@img.ImgId" />
+                                                    <label class="custom-control-label" for="img_@img.ImgId">
+                                                        @img.Alt
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block mt-3">
+                                <i class="fas fa-link"></i> Map Selected Images
+                            </button>
+
+                            <button type="button" class="btn btn-secondary btn-block" id="selectAllBtn">
+                                <i class="fas fa-check-square"></i> Select All
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            All product images are already mapped to this option.
+                            <hr />
+                            <a asp-action="ManageImages" asp-controller="Product" asp-route-id="@Model.ProId" class="btn btn-sm btn-primary">
+                                <i class="fas fa-upload"></i> Upload More Images
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-info-circle"></i> About Image Mapping</h5>
+        </div>
+        <div class="card-body">
+            <p>Image mapping allows you to associate specific product images with this option variant. For example:</p>
+            <ul>
+                <li>A "Red" color option can be mapped to images showing the product in red</li>
+                <li>An "XL" size option can be mapped to images showing size details</li>
+                <li>Multiple images can be mapped to a single option</li>
+            </ul>
+            <p class="mb-0"><strong>Note:</strong> General product images are displayed for all options. Mapped images are shown specifically when this option is selected.</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('selectAllBtn')?.addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('input[name="imageIds"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            this.innerHTML = allChecked
+                ? '<i class="fas fa-check-square"></i> Select All'
+                : '<i class="fas fa-square"></i> Deselect All';
+        });
+    </script>
+}   

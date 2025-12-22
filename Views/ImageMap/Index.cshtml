@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Glowry.Models.ImageMap>
+
+@{
+    ViewData["Title"] = "Image Mappings";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Image Mappings</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Mapping
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Option</th>
+                                <th>Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@Url.Action("GetImage", "ProductImg", new { id = item.ImgId })" 
+                                             alt="" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" 
+                                             class="rounded border" />
+                                    </td>
+                                    <td>@item.ProductImg?.Product?.ProName</td>
+                                    <td><strong>@item.ProductOption?.AttributeName</strong></td>
+                                    <td>@item.ProductOption?.AttributeValue</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.ImgMapId" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.ImgMapId" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> No image mappings found.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

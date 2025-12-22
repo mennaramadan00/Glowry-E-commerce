@@ -1,0 +1,123 @@
+﻿@model Glowry.Models.ProductOption
+
+@{
+    ViewData["Title"] = "Create Product Option";
+}
+
+<div class="container mt-4">
+    <h1>Create Product Option</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="ProId" class="control-label">Product</label>
+                    <select asp-for="ProId" class="form-control" asp-items="ViewBag.ProId">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                    <span asp-validation-for="ProId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AttributeName" class="control-label"></label>
+                    <select asp-for="AttributeName" class="form-control" id="attributeNameSelect">
+                        <option value="">-- Select Attribute --</option>
+                        <option value="Color">Color</option>
+                        <option value="Size">Size</option>
+                        <option value="Material">Material</option>
+                        <option value="Style">Style</option>
+                        <option value="Other">Other (Custom)</option>
+                    </select>
+                    <input type="text" id="customAttributeName" class="form-control mt-2" placeholder="Enter custom attribute name" style="display: none;" />
+                    <span asp-validation-for="AttributeName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AttributeValue" class="control-label"></label>
+                    <input asp-for="AttributeValue" class="form-control" placeholder="e.g., Red, XL, Cotton" />
+                    <span asp-validation-for="AttributeValue" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="StockQuantity" class="control-label"></label>
+                    <input asp-for="StockQuantity" class="form-control" type="number" min="0" value="0" />
+                    <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Option
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-info-circle"></i> About Product Options
+                </div>
+                <div class="card-body">
+                    <h6>What are Product Options?</h6>
+                    <p>Product options allow you to create variants of your products, such as:</p>
+                    <ul>
+                        <li><strong>Color:</strong> Red, Blue, Green, etc.</li>
+                        <li><strong>Size:</strong> S, M, L, XL, etc.</li>
+                        <li><strong>Material:</strong> Cotton, Silk, Polyester, etc.</li>
+                        <li><strong>Style:</strong> Classic, Modern, Vintage, etc.</li>
+                    </ul>
+                    <hr />
+                    <h6>Next Steps:</h6>
+                    <p>After creating an option, you can:</p>
+                    <ul>
+                        <li>Map specific images to this option</li>
+                        <li>Adjust stock quantities</li>
+                        <li>Create more options for the product</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-warning">
+                    <i class="fas fa-lightbulb"></i> Quick Tips
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Use consistent attribute names across products</li>
+                        <li>Set accurate stock quantities</li>
+                        <li>Map images to help customers visualize options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById('attributeNameSelect').addEventListener('change', function() {
+            const customInput = document.getElementById('customAttributeName');
+            const attributeNameField = document.getElementById('AttributeName');
+
+            if (this.value === 'Other') {
+                customInput.style.display = 'block';
+                customInput.addEventListener('input', function() {
+                    attributeNameField.value = this.value;
+                });
+            } else {
+                customInput.style.display = 'none';
+                attributeNameField.value = this.value;
+            }
+        });
+    </script>
+}
