@@ -1,0 +1,294 @@
+﻿@model Glowry.Models.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+    var cartTotal = Model.CartItems?.Sum(ci => ci.ProductOption.Product.Price * ci.Quantity) ?? 0;
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-shopping-cart"></i> Shopping Cart</h1>
+    <hr />
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    }
+
+    @if (Model.CartItems != null && Model.CartItems.Any())
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Cart Items (@Model.CartItems.Count)</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            var product = item.ProductOption.Product;
+                            var itemTotal = product.Price * item.Quantity;
+                            var mainImage = product.ProductImages?.FirstOrDefault() ??
+                            item.ProductOption.ImageMaps?.FirstOrDefault()?.ProductImg;
+
+                            <div class="row align-items-center border-bottom p-3" id="cart-item-@item.CartItemId">
+                                <div class="col-md-2">
+                                    @if (mainImage != null)
+                                    {
+                                        <img src="@Url.Action("GetImage", "ProductImg", new { id = mainImage.ImgId })"
+                                             alt="@product.ProName"
+                                             class="img-fluid rounded"
+                                             style="max-height: 100px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div style="width: 100%; height: 100px; background: #ddd; display: flex; align-items: center; justify-content: center;" class="rounded">
+                                            <i class="fas fa-image fa-2x text-muted"></i>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h6 class="mb-1">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProId">
+                                            @product.ProName
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted mb-1">
+                                        <small>
+                                            <strong>@item.ProductOption.AttributeName:</strong> @item.ProductOption.AttributeValue
+                                        </small>
+                                    </p>
+                                    @if (item.ProductOption.StockQuantity < 5)
+                                    {
+                                        <span class="badge badge-warning">
+                                            <i class="fas fa-exclamation-triangle"></i> Only @item.ProductOption.StockQuantity left!
+                                        </span>
+                                    }
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p class="mb-0"><strong>$@product.Price.ToString("F2")</strong></p>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    type="button"
+                                                    onclick="updateQuantity(@item.CartItemId, @(item.Quantity - 1))">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="number"
+                                               class="form-control form-control-sm text-center"
+                                               value="@item.Quantity"
+                                               min="1"
+                                               max="@item.ProductOption.StockQuantity"
+                                               id="qty-@item.CartItemId"
+                                               onchange="updateQuantity(@item.CartItemId, this.value)" />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    type="button"
+                                                    onclick="updateQuantity(@item.CartItemId, @(item.Quantity + 1))">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 text-right">
+                                    <p class="mb-2">
+                                        <strong class="item-total" id="total-@item.CartItemId">
+                                            $@itemTotal.ToString("F2")
+                                        </strong>
+                                    </p>
+                                    <form asp-action="RemoveItem" method="post" style="display: inline;"
+                                          onsubmit="return confirm('Remove this item from cart?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Continue Shopping
+                    </a>
+                    <form asp-action="Clear" method="post" style="display: inline;"
+                          onsubmit="return confirm('Are you sure you want to clear your entire cart?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> Clear Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-receipt"></i> Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            <dt class="col-6">Subtotal:</dt>
+                            <dd class="col-6 text-right" id="cart-subtotal">$@cartTotal.ToString("F2")</dd>
+
+                            <dt class="col-6">Items:</dt>
+                            <dd class="col-6 text-right">@Model.CartItems.Sum(ci => ci.Quantity)</dd>
+
+                            <dt class="col-6">Shipping:</dt>
+                            <dd class="col-6 text-right">
+                                @if (cartTotal > 50)
+                                {
+                                    <span class="text-success">FREE</span>
+                                }
+                                else
+                                {
+                                    <span>$5.99</span>
+                                }
+                            </dd>
+
+                            <dt class="col-6">Tax (Estimated):</dt>
+                            <dd class="col-6 text-right">$@((cartTotal * 0.1m).ToString("F2"))</dd>
+                        </dl>
+
+                        <hr />
+
+                        <dl class="row mb-3">
+                            <dt class="col-6"><h5>Total:</h5></dt>
+                            <dd class="col-6 text-right">
+                                <h5 class="text-success" id="cart-total">
+                                    $@((cartTotal + (cartTotal > 50 ? 0 : 5.99m) + (cartTotal * 0.1m)).ToString("F2"))
+                                </h5>
+                            </dd>
+                        </dl>
+
+                        @if (cartTotal > 50)
+                        {
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> You qualify for FREE shipping!
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> Add $@((50 - cartTotal).ToString("F2")) more for FREE shipping!
+                            </div>
+                        }
+
+                        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success btn-block btn-lg">
+                            <i class="fas fa-lock"></i> Proceed to Checkout
+                        </a>
+
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt"></i> Secure Checkout
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-tags"></i> Promo Code</h6>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Enter code" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                <h4>Your Cart is Empty</h4>
+                <p class="text-muted">Looks like you haven't added anything to your cart yet.</p>
+                <a asp-controller="Product" asp-action="Index" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function updateQuantity(cartItemId, newQuantity) {
+            newQuantity = parseInt(newQuantity);
+
+            if (newQuantity < 1) {
+                alert('Quantity must be at least 1');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateQuantity", "Cart")',
+                type: 'POST',
+                data: {
+                    cartItemId: cartItemId,
+                    quantity: newQuantity,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(result) {
+                    if (result.success) {
+                        // Update quantity input
+                        $('#qty-' + cartItemId).val(newQuantity);
+
+                        // Update item total
+                        $('#total-' + cartItemId).text('$' + result.itemTotal);
+
+                        // Update cart total
+                        $('#cart-subtotal').text('$' + result.cartTotal);
+
+                        // Recalculate grand total (subtotal + shipping + tax)
+                        var subtotal = parseFloat(result.cartTotal);
+                        var shipping = subtotal > 50 ? 0 : 5.99;
+                        var tax = subtotal * 0.1;
+                        var total = subtotal + shipping + tax;
+                        $('#cart-total').text('$' + total.toFixed(2));
+
+                        // Show success message
+                        toastr.success('Cart updated!');
+                    } else {
+                        alert(result.message);
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('Error updating cart. Please try again.');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}
