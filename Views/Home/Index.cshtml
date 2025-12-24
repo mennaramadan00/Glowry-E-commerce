@@ -1,45 +1,1093 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Glowry - Premium Makeup & Beauty";
 }
-<link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+
+<style>
+    :root {
+        --primary: #E8609C;
+        --primary-dark: #DF1A6E;
+        --background: #FFFFFF;
+        --foreground: #3D2933;
+        --pink-50: #FFF5F8;
+        --pink-100: #FDE8EF;
+        --pink-200: #F9CFDD;
+        --pink-300: #F3A6C3;
+        --pink-400: #ED7AAD;
+        --pink-500: #E54D91;
+        --pink-600: #DF1A6E;
+        --card: #FDF8FA;
+        --secondary: #F9F4F6;
+        --accent: #F7D4E2;
+        --muted: #F5F0F2;
+        --border: #EBDEE3;
+        --shadow-sm: 0 2px 8px rgba(232, 96, 156, 0.08);
+        --shadow-md: 0 8px 24px rgba(232, 96, 156, 0.12);
+        --shadow-lg: 0 20px 40px rgba(232, 96, 156, 0.15);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        font-family: 'Poppins', 'Segoe UI', sans-serif;
+        color: var(--foreground);
+        background: var(--background);
+        overflow-x: hidden;
+    }
+
+    /* Hero Section - Enhanced */
+    .hero-section {
+        background: linear-gradient(135deg, var(--pink-100) 0%, var(--pink-50) 50%, #FFFFFF 100%);
+        padding: 120px 0 100px;
+        position: relative;
+        overflow: hidden;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+    }
+
+        .hero-section::before,
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero-section::before {
+            top: -20%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+        }
+
+        .hero-section::after {
+            bottom: -15%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            animation-delay: -4s;
+        }
+
+    @@keyframes float {
+        0%, 100%
+
+    {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(20px, -30px) scale(1.05);
+    }
+
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 700;
+        color: var(--foreground);
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1.1rem, 2vw, 1.4rem);
+        color: var(--pink-600);
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+
+    .hero-image {
+        position: relative;
+        z-index: 2;
+        animation: fadeInRight 1s ease-out;
+        filter: drop-shadow(0 20px 60px rgba(232, 96, 156, 0.25));
+    }
+
+    @@keyframes fadeInRight {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    /* Button Styles - Enhanced */
+    .btn-primary-custom {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--pink-500) 100%);
+        border: none;
+        padding: 16px 48px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(232, 96, 156, 0.3);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(232, 96, 156, 0.4);
+            color: white;
+        }
+
+        .btn-primary-custom:active {
+            transform: translateY(-1px);
+        }
+
+    .btn-outline-custom {
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 14px 48px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        background: transparent;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-outline-custom::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--primary);
+            transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .btn-outline-custom:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        .btn-outline-custom:hover {
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+    /* Stats Section - Enhanced */
+    .stats-section {
+        background: linear-gradient(180deg, var(--pink-50) 0%, white 100%);
+        padding: 80px 0;
+        position: relative;
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 20px;
+        transition: var(--transition);
+    }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+
+    .stat-number {
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--pink-600) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: var(--foreground);
+        opacity: 0.8;
+        font-weight: 500;
+    }
+
+    /* Category Cards - Enhanced */
+    .category-card {
+        background: white;
+        border-radius: 24px;
+        padding: 50px 30px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: var(--transition);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
+            transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+            .category-card:hover::before {
+                top: 0;
+            }
+
+    .category-icon {
+        font-size: 4rem;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+        transition: var(--transition);
+    }
+
+    .category-card:hover .category-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .category-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+        border: 4px solid var(--accent);
+        transition: var(--transition);
+    }
+
+    .category-card:hover .category-image {
+        transform: scale(1.1);
+        border-color: var(--primary);
+    }
+
+    .category-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--foreground);
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+        transition: var(--transition);
+    }
+
+    .category-card:hover .category-title {
+        color: var(--primary);
+    }
+
+    .category-description {
+        color: var(--foreground);
+        opacity: 0.7;
+        position: relative;
+        z-index: 1;
+        font-size: 0.95rem;
+    }
+
+    /* Product Cards - Enhanced */
+    .featured-section {
+        background: var(--secondary);
+        padding: 100px 0;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition: var(--transition);
+        height: 100%;
+        box-shadow: var(--shadow-sm);
+    }
+
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+    .product-image {
+        position: relative;
+        padding-top: 100%;
+        background: var(--muted);
+        overflow: hidden;
+    }
+
+        .product-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.1);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--primary), var(--pink-600));
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(232, 96, 156, 0.3);
+        z-index: 2;
+    }
+
+    .product-body {
+        padding: 30px;
+    }
+
+    .product-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--foreground);
+        margin-bottom: 12px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--pink-600) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+    }
+
+    /* Testimonials - Enhanced */
+    .testimonial-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        border: 1px solid var(--border);
+        height: 100%;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+        position: relative;
+    }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 6rem;
+            color: var(--accent);
+            font-family: Georgia, serif;
+            line-height: 1;
+            opacity: 0.3;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+    .testimonial-stars {
+        color: #FFD700;
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .testimonial-text {
+        color: var(--foreground);
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin-bottom: 24px;
+        font-style: italic;
+        position: relative;
+        z-index: 1;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .testimonial-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--pink-500));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 12px rgba(232, 96, 156, 0.3);
+        flex-shrink: 0;
+    }
+
+    /* CTA Section - Enhanced */
+    .cta-section {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--pink-600) 100%);
+        padding: 100px 0;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 10s ease-in-out infinite;
+        }
+
+    .cta-title {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 700;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .cta-subtitle {
+        font-size: clamp(1.1rem, 2vw, 1.4rem);
+        margin-bottom: 40px;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-white-custom {
+        background: white;
+        color: var(--primary);
+        padding: 18px 60px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        border: none;
+        transition: var(--transition);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+        .btn-white-custom:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            color: var(--primary);
+        }
+
+    /* Section Titles - Enhanced */
+    .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        color: var(--foreground);
+        margin-bottom: 15px;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--pink-600));
+            border-radius: 2px;
+        }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 60px;
+        font-weight: 400;
+    }
+
+    /* Newsletter Section - Enhanced */
+    .newsletter-section {
+        background: linear-gradient(180deg, white 0%, var(--pink-50) 100%);
+        padding: 80px 0;
+    }
+
+    .newsletter-form {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .newsletter-input {
+        border: 2px solid var(--border);
+        border-radius: 50px;
+        padding: 18px 32px;
+        font-size: 1rem;
+        width: 100%;
+        transition: var(--transition);
+        background: white;
+    }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(232, 96, 156, 0.1);
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-section
+
+    {
+        padding: 80px 0 60px;
+        min-height: auto;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .btn-primary-custom,
+    .btn-outline-custom {
+        padding: 14px 32px;
+        font-size: 1rem;
+    }
+
+    .category-card {
+        padding: 40px 25px;
+    }
+
+    .stats-section {
+        padding: 60px 0;
+    }
+
+    .featured-section {
+        padding: 80px 0;
+    }
+
+    .testimonial-card {
+        padding: 30px;
+    }
+
+    .newsletter-form .d-flex {
+        flex-direction: column;
+    }
+
+    .newsletter-input {
+        margin-bottom: 15px;
+    }
+
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+    /* Utility Classes */
+    .text-gradient {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--pink-600) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+</style>
 
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row align-items-center gy-5">
-
-            <!-- Text -->
-            <div class="col-lg-6 text-center text-lg-start">
-                @* <span class="badge-pill">New Collection 2024</span> *@
-
-                <h1 class="hero-title">
-                    Discover Your <br />
-                    <span>Natural Glow</span>
-                </h1>
-
-                <p class="hero-text">
-                    Embrace your beauty with our premium collection of skincare
-                    and makeup products. Crafted with love, designed for radiance.
-                </p>
-
-                <div class="buttons d-flex justify-content-center justify-content-lg-start gap-3">
-                    <a href="#" class="btn btn-pink">Shop Now →</a>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title">Discover Your Natural Glow</h1>
+                <p class="hero-subtitle">Premium makeup crafted with love for your beautiful skin. Cruelty-free, sustainable, and designed to make you feel confident.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-primary-custom">
+                        Shop Now
+                    </a>
+                    <a asp-controller="Home" asp-action="About" class="btn btn-outline-custom">
+                        Learn More
+                    </a>
                 </div>
             </div>
-
-            <!-- Image -->
-            <div class="col-lg-6 text-center">
-                <div class="image-card">
-                    <img src="~/imges/pexels-min-o-2151190130-31552020.jpg"
-                         alt="Makeup"
-                         class="img-fluid hero-image">
-                </div>
+            <div class="col-lg-6">
+                <img src="/imges/hero-makeup.png" alt="Glowry Makeup" class="img-fluid hero-image" />
             </div>
-
         </div>
     </div>
 </section>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/home.js"></script>
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box">
+                    <div class="stat-number">@(ViewBag.Stats?.TotalCustomers ?? 0)+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box">
+                    <div class="stat-number">@(ViewBag.Stats?.TotalProducts ?? 0)+</div>
+                    <div class="stat-label">Premium Products</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Cruelty Free</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box">
+                    <div class="stat-number">@(ViewBag.Stats?.TotalCategories ?? 0)+</div>
+                    <div class="stat-label">Collections</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 my-5">
+    <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-subtitle">Find your perfect products in our curated collections</p>
+
+        <div class="row g-4">
+            @if (ViewBag.Categories != null && ViewBag.Categories.Count > 0)
+            {
+                @foreach (var category in ViewBag.Categories as List<Glowry.Models.Category>)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@category.CategoryId" class="text-decoration-none">
+                            <div class="category-card">
+                                @if (category.Img != null)
+                                {
+                                    <img src="@Url.Action("GetImage", "Category", new { id = category.CategoryId })"
+                                         alt="@category.CategName"
+                                         class="category-image" />
+                                }
+                                else
+                                {
+                                    <div class="category-icon">✨</div>
+                                }
+                                <h3 class="category-title">@category.CategName</h3>
+                                <p class="category-description">@(category.Products?.Count() ?? 0) Products Available</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- Fallback categories with improved design -->
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Product" asp-action="Index" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon">💄</div>
+                            <h3 class="category-title">Lips</h3>
+                            <p class="category-description">Lipsticks, glosses & liners</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Product" asp-action="Index" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon">👁️</div>
+                            <h3 class="category-title">Eyes</h3>
+                            <p class="category-description">Shadows, mascaras & essentials</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Product" asp-action="Index" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon">✨</div>
+                            <h3 class="category-title">Face</h3>
+                            <p class="category-description">Foundations & highlighters</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Product" asp-action="Index" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon">🌸</div>
+                            <h3 class="category-title">Skincare</h3>
+                            <p class="category-description">Nourish your skin</p>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-subtitle">Our bestsellers loved by thousands of beauty enthusiasts</p>
+
+        <div class="row g-4">
+            @if (ViewBag.FeaturedProducts != null && ViewBag.FeaturedProducts.Count > 0)
+            {
+                @foreach (var product in ViewBag.FeaturedProducts as List<Glowry.Models.Product>)
+                {
+                    var mainImage = product.ProductImages?.FirstOrDefault();
+                    var hasStock = product.ProductOptions?.Any(o => o.StockQuantity > 0) ?? false;
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card">
+                            <div class="product-image">
+                                @if (product.CreatedAt > DateTime.UtcNow.AddDays(-30))
+                                {
+                                    <span class="product-badge">New</span>
+                                }
+                                else if (product.isfeatured)
+                                {
+                                    <span class="product-badge">Featured</span>
+                                }
+
+                                @if (mainImage != null)
+                                {
+                                    <img src="@Url.Action("GetImage", "ProductImg", new { id = mainImage.ImgId })"
+                                         alt="@product.ProName" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center justify-content-center h-100" style="background: var(--muted);">
+                                        <i class="fas fa-image fa-3x" style="color: var(--border);"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="product-body">
+                                <h3 class="product-title">@product.ProName</h3>
+                                <div class="product-price">$@product.Price.ToString("F2")</div>
+                                @if (hasStock)
+                                {
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProId"
+                                       class="btn btn-primary-custom btn-sm w-100">View Details</a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm w-100" disabled>Out of Stock</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <div class="my-5">
+                        <i class="fas fa-box-open fa-4x mb-4" style="color: var(--border);"></i>
+                        <p class="text-muted fs-5 mb-4">No featured products available at the moment.</p>
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-primary-custom">
+                            Browse All Products
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (ViewBag.FeaturedProducts != null && ViewBag.FeaturedProducts.Count > 0)
+        {
+            <div class="text-center mt-5 pt-4">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-primary-custom btn-lg">
+                    View All Products
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 my-5">
+    <div class="container">
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-subtitle">Real reviews from real beauty lovers worldwide</p>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Absolutely love the quality! The lipsticks are so smooth and long-lasting. Glowry has become my go-to makeup brand."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">S</div>
+                        <div>
+                            <div class="fw-bold text-dark">Sarah Johnson</div>
+                            <div class="small text-gradient">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Finally found a foundation that matches my skin tone perfectly! The coverage is amazing and it lasts all day without feeling heavy."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">E</div>
+                        <div>
+                            <div class="fw-bold text-dark">Emily Chen</div>
+                            <div class="small text-gradient">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"The eye shadow palette is incredible! The colors are so vibrant and blend beautifully. Worth every penny!"</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">M</div>
+                        <div>
+                            <div class="fw-bold text-dark">Maria Garcia</div>
+                            <div class="small text-gradient">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="container">
+        <h2 class="section-title">Stay in the Glow</h2>
+        <p class="section-subtitle">Subscribe for exclusive offers, beauty tips, and new product launches</p>
+
+        <div class="newsletter-form">
+            <form asp-action="Subscribe" method="post" id="newsletterForm">
+                @Html.AntiForgeryToken()
+                <div class="d-flex flex-column flex-md-row gap-3">
+                    <input type="email" name="email" class="newsletter-input flex-grow-1"
+                           placeholder="Enter your email address" required />
+                    <button type="submit" class="btn btn-primary-custom">Subscribe</button>
+                </div>
+                <div id="newsletter-message" class="mt-3 text-center"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="cta-title">Ready to Glow?</h2>
+        <p class="cta-subtitle">Join thousands of beauty lovers who trust Glowry for their makeup needs</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-white-custom">
+            Start Shopping Now
+        </a>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Newsletter form submission with improved error handling
+        document.getElementById('newsletterForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const formData = new FormData(form);
+            const messageDiv = document.getElementById('newsletter-message');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Subscribing...';
+
+            fetch('@Url.Action("Subscribe", "Home")', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="alert alert-success fade-in"><i class="fas fa-check-circle me-2"></i>' + data.message + '</div>';
+                    form.reset();
+                } else {
+                    messageDiv.innerHTML = '<div class="alert alert-danger fade-in"><i class="fas fa-exclamation-circle me-2"></i>' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                messageDiv.innerHTML = '<div class="alert alert-danger fade-in"><i class="fas fa-exclamation-triangle me-2"></i>An error occurred. Please try again.</div>';
+            })
+            .finally(() => {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+
+        // Smooth scroll animation for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.category-card, .product-card, .testimonial-card, .stat-box').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add stagger effect to cards
+        document.querySelectorAll('.row').forEach(row => {
+            const cards = row.querySelectorAll('.category-card, .product-card, .testimonial-card');
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroImage = document.querySelector('.hero-image');
+
+            if (heroImage && scrolled < window.innerHeight) {
+                heroImage.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Add loading animation for images
+        document.querySelectorAll('.product-image img, .category-image').forEach(img => {
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+            });
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.5s ease';
+        });
+
+        // Testimonial card random float animation
+        document.querySelectorAll('.testimonial-card').forEach((card, index) => {
+            const randomDelay = Math.random() * 3;
+            card.style.animation = `float 6s ease-in-out ${randomDelay}s infinite`;
+        });
+    </script>
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
