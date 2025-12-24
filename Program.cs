@@ -10,7 +10,7 @@ namespace Glowry
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -21,21 +21,61 @@ namespace Glowry
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             //identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {   options.SignIn.RequireConfirmedAccount = true;
+            {
+                options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = true;
-                options.Password.RequireNonAlphanumeric = false; 
-                options.Password.RequireUppercase =false; 
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
             builder.Services.AddControllersWithViews();
             //esmail service 
             builder.Services.AddTransient<IEmailSender, Glowry.Services.EmailSender>();
             builder.Services.AddRazorPages();
+            
+
 
             var app = builder.Build();
 
-            
+            //Role
+         
+
+            /* ===== Create Roles & Admin User ===== */
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                // Create roles
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+
+                if (!await roleManager.RoleExistsAsync("User"))
+                    await roleManager.CreateAsync(new IdentityRole("User"));
+
+                // Create admin user (optional)
+                var adminEmail = "mennamennamenna333@yahoo.com";
+                var adminPassword = "Admin12345";
+
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
+                {
+                    adminUser = new ApplicationUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        EmailConfirmed = true
+                    };
+
+                    await userManager.CreateAsync(adminUser, adminPassword);
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
+            /* ===== End ===== */
+
+
 
 
             // Configure the HTTP request pipeline.
@@ -86,7 +126,8 @@ namespace Glowry
 
             app.MapRazorPages();
 
-            app.Run();
+            await app.RunAsync();
+
         }
     }
-}
+} 

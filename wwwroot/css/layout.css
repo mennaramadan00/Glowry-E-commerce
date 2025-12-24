@@ -14,14 +14,15 @@ body {
 }
 
 /* ================= Navbar ================= */
-.glowry-navbar {
+/*.glowry-navbar {
     background: transparent !important;
     border: none !important;
-    position: fixed !important;
+    position: sticky !important;
     top: 0;
+    backdrop-filter: blur(8px);
     width: 100%;
-    z-index: 1000;
-}
+    z-index: 100;
+}*/
 
 .glowry-brand {
     font-family: 'Playfair Display', serif;
@@ -349,3 +350,86 @@ main {
     .glowry-icons form button:hover::after {
         width: 100%;
     }
+
+/* ================= Navbar ================= */
+.glowry-navbar {
+    background: rgba(255, 255, 255, 0.1); /* semi-transparent */
+    backdrop-filter: blur(8px); /* frosted glass effect */
+    border: none !important;
+    position: sticky; /* sticky navbar */
+    top: 0;
+    z-index: 9999;
+    padding: 0.5rem 1rem; /* smaller height */
+    transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero-section {
+   
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    padding: 5rem 0;
+    background: ffffff;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+    .hero-title span {
+        color: #f23871;
+    }
+
+.hero-text {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+}
+
+.badge-pill {
+    display: inline-block;
+    padding: 0.35em 0.9em;
+    border-radius: 50px;
+    background-color: var(--pink);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-pink {
+    background-color: #f23871;
+    color: #fff;
+    padding: 0.65rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .btn-pink:hover {
+        background-color: #e03f8f;
+        transform: translateY(-2px);
+    }
+
+/* Hero Image Card */
+.image-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 1rem;
+    display: inline-block;
+}
+
+.hero-image {
+    max-width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    height:80%;
+}
+

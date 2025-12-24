@@ -65,37 +65,12 @@
 
                         }
 
-                        
-                        @* else
-                        {
-                            //not logged in
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Shop" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Products" asp-action="Skincare">Shop</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Products" asp-action="Makeup">Contact us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Products" asp-action="BestSellers">About</a>
-                            </li>
-                            
-                        } *@
+                       
                     </ul>
                 </div>
 
                 <!-- Icons -->
                 <div class="glowry-icons d-flex align-items-center gap-3">
-
-                    @* <a asp-controller="Search" asp-action="Index">
-                        <i class="bi bi-search"></i>
-                    </a>
-
-                    <a asp-controller="Cart" asp-action="Index" class="position-relative">
-                        <i class="bi bi-cart"></i>
-                    </a> *@
 
                     @if (User.Identity.IsAuthenticated)
                     {

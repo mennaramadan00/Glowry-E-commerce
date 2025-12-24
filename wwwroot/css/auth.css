@@ -1,0 +1,80 @@
+﻿/* ===== Auth Page ===== */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* Titles */
+.auth-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: .5rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 2rem;
+}
+
+/* Form */
+.auth-form .form-control {
+    border-radius: 12px;
+}
+
+    .auth-form .form-control:focus {
+        box-shadow: none;
+        border-color: #ff4fa3;
+    }
+
+/* Remember me */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Links */
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+    .auth-links a {
+        display: block;
+        color: #555;
+        font-size: .9rem;
+        margin-top: .5rem;
+        text-decoration: none;
+    }
+
+        .auth-links a:hover {
+            color: #ff4fa3;
+        }
+
+/* External login */
+.external-login {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+    .external-login span {
+        display: block;
+        margin-bottom: 1rem;
+        color: #777;
+        font-size: .9rem;
+    }
