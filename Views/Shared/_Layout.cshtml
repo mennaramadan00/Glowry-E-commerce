@@ -44,9 +44,7 @@
                 <!-- Links -->
                 <div class="collapse navbar-collapse justify-content-center" id="glowryNav">
                     <ul class="navbar-nav gap-4">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            //logged in
+                      
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Shop" asp-action="Index">Home</a>
                             </li>
@@ -59,14 +57,16 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Products" asp-action="BestSellers">About</a>
                             </li>
+                              @if (User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Orders" asp-action="GetUserOrders">My Orders</a>
                             </li>
 
-
-
                         }
-                        else
+
+                        
+                        @* else
                         {
                             //not logged in
                             <li class="nav-item">
@@ -82,7 +82,7 @@
                                 <a class="nav-link" asp-controller="Products" asp-action="BestSellers">About</a>
                             </li>
                             
-                        }
+                        } *@
                     </ul>
                 </div>
 
@@ -108,7 +108,7 @@
                               asp-page="/Account/Logout"
                               method="post"
                               class="d-inline">
-                            <button type="submit" class="btn btn-link text-danger p-0">
+                            <button type="submit" class="btn btn-link p-0" >
                                 Logout
                             </button>
                         </form>
@@ -124,7 +124,7 @@
 
                         <a asp-area="Identity"
                            asp-page="/Account/Register"
-                           class="nav-link">
+                           class="nav-link" >
                             Register
                         </a>
                     }
@@ -167,6 +167,16 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                document.body.classList.add('scrolled');
+            } else {
+                document.body.classList.remove('scrolled');
+            }
+        });
+    </script>
+
 
 </body>
 </html>

@@ -17,6 +17,10 @@ body {
 .glowry-navbar {
     background: transparent !important;
     border: none !important;
+    position: fixed !important;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .glowry-brand {
@@ -265,3 +269,83 @@ main {
         font-size: 1.1rem;
     }
 }
+/* ================= FORCE Auth links to match navbar links ================= */
+
+/* Common typography reset */
+.glowry-icons a.nav-link,
+.glowry-icons button.nav-link {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem; /* SAME as Bootstrap nav-link */
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--dark);
+    padding: 5px 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+    /* Hover color */
+    .glowry-icons a.nav-link:hover,
+    .glowry-icons button.nav-link:hover {
+        color: var(--pink);
+    }
+
+    /* Underline animation (identical) */
+    .glowry-icons a.nav-link::after,
+    .glowry-icons button.nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 2px;
+        background: var(--pink);
+        transition: width 0.3s ease;
+    }
+
+    .glowry-icons a.nav-link:hover::after,
+    .glowry-icons button.nav-link:hover::after {
+        width: 100%;
+    }
+
+
+
+/* Kill Bootstrap btn-link + text-danger */
+.glowry-icons form button {
+    all: unset; /* removes ALL button styles */
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--dark);
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+    /* Hover color */
+    .glowry-icons form button:hover {
+        color: var(--pink);
+    }
+
+    /* Underline animation */
+    .glowry-icons form button::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 2px;
+        background: var(--pink);
+        transition: width 0.3s ease;
+    }
+
+    .glowry-icons form button:hover::after {
+        width: 100%;
+    }

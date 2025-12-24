@@ -20,7 +20,7 @@ namespace Glowry
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             //identity
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {   options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = true;
@@ -31,7 +31,7 @@ namespace Glowry
             builder.Services.AddControllersWithViews();
             //esmail service 
             builder.Services.AddTransient<IEmailSender, Glowry.Services.EmailSender>();
-
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 

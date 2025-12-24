@@ -1,0 +1,144 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+
+:root {
+    /* Primary */
+    --pink-primary: #E8609C;
+    --foreground: #3D2933;
+    /* Palette */
+    --pink-50: #FFF5F8;
+    --pink-100: #FDE8EF;
+    --pink-200: #F9CFDD;
+    --pink-300: #F3A6C3;
+    --pink-400: #ED7AAD;
+    --pink-500: #E54D91;
+    --pink-600: #DF1A6E;
+    /* Supporting */
+    --card: #FDF8FA;
+    --border: #EBDEE3;
+    --muted: #F5F0F2;
+}
+
+/* ================= Page ================= */
+
+.add-role-page {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient( 135deg, var(--pink-50), var(--pink-100) );
+    padding: 40px 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ================= Card ================= */
+
+.role-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 40px 35px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(232, 96, 156, 0.12);
+    text-align: center;
+    animation: fadeUp 0.6s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= Text ================= */
+
+.role-title {
+    color: var(--foreground);
+    font-weight: 500;
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+}
+
+.role-subtitle {
+    font-size: 0.95rem;
+    color: #7b5a67;
+    margin-bottom: 30px;
+}
+
+/* ================= Form ================= */
+
+.role-form {
+    text-align: left;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--foreground);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--pink-400);
+        box-shadow: 0 0 0 3px rgba(232, 96, 156, 0.15);
+    }
+
+/* ================= Button ================= */
+
+.btn-pink {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient( 135deg, var(--pink-500), var(--pink-600) );
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .btn-pink:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(223, 26, 110, 0.35);
+    }
+
+/* ================= Alerts ================= */
+
+.alert-success {
+    background: var(--pink-200);
+    color: var(--foreground);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+}
+
+/* ================= Validation ================= */
+
+.text-danger {
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.validation-summary {
+    margin-top: 15px;
+}

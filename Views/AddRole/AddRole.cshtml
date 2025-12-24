@@ -1,0 +1,44 @@
+﻿@model Glowry.View_Model.AddRoleViewModel
+
+@{
+    ViewData["Title"] = "Add Role";
+}
+
+<link rel="stylesheet" href="~/css/addrole.css" />
+
+<div class="add-role-page">
+    <div class="role-card">
+
+        <h2 class="role-title">Create New Role</h2>
+        <p class="role-subtitle">
+            Add a new role
+        </p>
+
+        @if (ViewBag.sucess == true)
+        {
+            <div class="alert-success">
+                Role created successfully 
+            </div>
+        }
+
+        <form asp-action="AddRole" method="post" class="role-form">
+
+            <div class="form-group">
+                <label asp-for="RoleName"></label>
+                <input asp-for="RoleName" class="form-control" placeholder="Enter role name" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-pink">
+                Add Role
+            </button>
+
+        </form>
+
+        <div asp-validation-summary="All" class="text-danger validation-summary"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
