@@ -22,6 +22,7 @@ namespace Glowry
             //identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
+            
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = true;
@@ -33,6 +34,8 @@ namespace Glowry
             builder.Services.AddControllersWithViews();
             //esmail service 
             builder.Services.AddTransient<IEmailSender, Glowry.Services.EmailSender>();
+
+
             builder.Services.AddRazorPages();
             
 
@@ -42,7 +45,7 @@ namespace Glowry
             //Role
          
 
-            /* ===== Create Roles & Admin User ===== */
+            
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

@@ -1,214 +1,207 @@
-﻿@model Glowry.Models.Category
+﻿@model IEnumerable<Glowry.Models.Category>
 
 @{
-    ViewData["Title"] = "Create Category";
-
-    if (!User.IsInRole("Admin"))
-    {
-        Context.Response.Redirect("/Home/Index");
-        return;
-    }
+    ViewData["Title"] = "Categories";
 }
 
-<style>
-    :root {
-        --primary: #E8609C;
-        --foreground: #3D2933;
-        --bg: #FFFFFF;
-        --pink-50: #FFF5F8;
-        --pink-100: #FDE8EF;
-        --pink-200: #F9CFDD;
-        --pink-300: #F3A6C3;
-        --pink-400: #ED7AAD;
-        --pink-500: #E54D91;
-        --pink-600: #DF1A6E;
-        --card: #FDF8FA;
-        --secondary: #F9F4F6;
-        --accent: #F7D4E2;
-        --muted: #F5F0F2;
-        --border: #EBDEE3;
-    }
-
-    body {
-        background: var(--bg);
-        color: var(--foreground);
-    }
-
-    h1 {
-        color: var(--pink-600);
-        font-weight: 700;
-    }
-
-    .form-card {
-        background: var(--card);
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        padding: 28px;
-        box-shadow: 0 15px 30px rgba(232, 96, 156, 0.15);
-    }
-
-    label {
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-
-    .form-control,
-    .form-control-file {
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        padding: 10px 14px;
-    }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(232, 96, 156, 0.25);
-        }
-
-    .btn-primary {
-        background: var(--primary);
-        border: none;
-        border-radius: 12px;
-        padding: 10px 24px;
-        font-weight: 600;
-    }
-
-        .btn-primary:hover {
-            background: var(--pink-600);
-        }
-
-    .btn-secondary {
-        background: var(--muted);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 10px 24px;
-        font-weight: 600;
-        color: var(--foreground);
-    }
-
-        .btn-secondary:hover {
-            background: var(--accent);
-        }
-
-    .info-card {
-        background: var(--secondary);
-        border-radius: 16px;
-        border: 1px solid var(--border);
-    }
-
-        .info-card .card-header {
-            background: var(--primary);
-            color: #fff;
-            font-weight: 600;
-            border-radius: 16px 16px 0 0;
-        }
-
-    #imagePreview img {
-        border-radius: 14px;
-        border: 2px dashed var(--pink-300);
-        background: var(--pink-50);
-        padding: 6px;
-    }
-</style>
-
-<div class="container mt-5">
-    <h1>Create New Category</h1>
-    <hr />
-
-    <div class="row">
-        <!-- FORM -->
-        <div class="col-md-6">
-            <div class="form-card">
-                <form asp-action="Create" method="post" enctype="multipart/form-data">
-
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                    <div class="form-group mb-3">
-                        <label>Category Name</label>
-                        <input type="text" name="categName" id="categName"
-                               class="form-control"
-                               placeholder="Dresses, Shoes..."
-                               required />
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Category Slug</label>
-                        <input type="text" name="categSlug" id="categSlug"
-                               class="form-control"
-                               placeholder="dresses, shoes..."
-                               required />
-                        <small class="text-muted">
-                            Lowercase – hyphens only
-                        </small>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Category Image</label>
-                        <input type="file" name="imageFile" id="imageFile"
-                               class="form-control-file"
-                               accept="image/*" />
-                    </div>
-
-                    <div id="imagePreview" class="mb-4" style="display:none;">
-                        <label class="d-block mb-2">Image Preview</label>
-                        <img id="previewImg" class="img-fluid" style="max-height:200px;" />
-                    </div>
-
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Create
-                        </button>
-
-                        <a asp-action="Index" class="btn btn-secondary">
-                            Back
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- TIPS -->
-        <div class="col-md-6">
-            <div class="card info-card">
-                <div class="card-header">
-                    <i class="fas fa-info-circle"></i> Category Tips
-                </div>
-                <div class="card-body">
-                    <ul>
-                        <li>Names should be clear</li>
-                        <li>2–3 words max</li>
-                        <li>Slug = lowercase + hyphens</li>
-                        <li>Image: 800×600 recommended</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Categories</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Category
+        </a>
     </div>
-</div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
     }
 
-    <script>
-        document.getElementById('categName').addEventListener('input', function (e) {
-            const slug = e.target.value
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            document.getElementById('categSlug').value = slug;
-        });
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    }
 
-        document.getElementById('imageFile').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (!file) return;
+    @if (Model != null && Model.Any())
+    {
+        <!-- Grid View -->
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="position-relative">
+                            @if (item.Img != null)
+                            {
+                                <img src="@Url.Action("GetImage", "Category", new { id = item.CategoryId })"
+                                     alt="@item.CategName"
+                                     class="card-img-top"
+                                     style="height: 200px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-folder fa-4x text-white opacity-50"></i>
+                                </div>
+                            }
+                            @if (item.Products != null && item.Products.Any())
+                            {
+                                <span class="badge badge-primary position-absolute" style="top: 10px; right: 10px;">
+                                    <i class="fas fa-box"></i> @item.Products.Count()
+                                </span>
+                            }
+                        </div>
 
-            const reader = new FileReader();
-            reader.onload = function (ev) {
-                document.getElementById('previewImg').src = ev.target.result;
-                document.getElementById('imagePreview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        });
-    </script>
-}
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">@item.CategName</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-link"></i> <code>@item.CategSlug</code>
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <span class="badge badge-info">
+                                    @(item.Products?.Count() ?? 0) Product(s)
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="card-footer bg-white">
+                            <div class="btn-group w-100" role="group">
+                                <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-sm btn-info" title="Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Count()</h2>
+                        <p class="mb-0">Total Categories</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Sum(c => c.Products?.Count() ?? 0)</h2>
+                        <p class="mb-0">Total Products</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning">
+                    <div class="card-body text-center">
+                        <h2 class="mb-0">@Model.Count(c => c.Products == null || !c.Products.Any())</h2>
+                        <p class="mb-0">Empty Categories</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Table -->
+        <div class="card mt-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-table"></i> Category List</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 100px;">Image</th>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Products</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (item.Img != null)
+                                        {
+                                            <img src="@Url.Action("GetImage", "Category", new { id = item.CategoryId })"
+                                                 alt="@item.CategName"
+                                                 style="width: 60px; height: 60px; object-fit: cover;"
+                                                 class="rounded" />
+                                        }
+                                        else
+                                        {
+                                            <div style="width: 60px; height: 60px; background: #ddd; display: flex; align-items: center; justify-content: center;" class="rounded">
+                                                <i class="fas fa-folder"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <strong>@item.CategName</strong>
+                                    </td>
+                                    <td class="align-middle">
+                                        <code>@item.CategSlug</code>
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (item.Products != null && item.Products.Any())
+                                        {
+                                            <span class="badge badge-primary badge-pill">@item.Products.Count()</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No products</span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                <h4>No Categories Found</h4>
+                <p class="text-muted">Categories help organize your products. Create your first category to get started.</p>
+                <a asp-action="Create" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus"></i> Create Your First Category
+                </a>
+            </div>
+        </div>
+    }
+</div>
