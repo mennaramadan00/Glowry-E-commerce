@@ -4,28 +4,128 @@
     ViewData["Title"] = "Product Details";
 }
 
+<style>
+    :root {
+        --pink-50: #FFF5F8;
+        --pink-100: #FDE8EF;
+        --pink-200: #F9CFDD;
+        --pink-400: #ED7AAD;
+        --pink-500: #E54D91;
+        --pink-600: #DF1A6E;
+        --fg: #3D2933;
+        --card: #FDF8FA;
+        --border: #EBDEE3;
+    }
+
+    body {
+        background: #fff;
+        color: var(--fg);
+    }
+
+    h1 {
+        color: var(--pink-600);
+        font-weight: 700;
+    }
+
+    /* Cards */
+    .card-soft {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        overflow: hidden;
+    }
+
+    .card-soft-header {
+        background: linear-gradient(135deg,var(--pink-500),var(--pink-600));
+        color: #fff;
+        padding: 14px 20px;
+        font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-main {
+        background: linear-gradient(135deg,var(--pink-500),var(--pink-600));
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 10px 18px;
+        box-shadow: 0 6px 18px rgba(223,26,110,.25);
+        transition: .25s;
+    }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+    .btn-soft {
+        background: var(--pink-100);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px 18px;
+        color: var(--fg);
+    }
+
+    /* Badges */
+    .badge-main {
+        background: var(--pink-500);
+        color: #fff;
+        border-radius: 20px;
+        padding: 6px 12px;
+    }
+
+    .badge-soft {
+        background: var(--pink-100);
+        border-radius: 20px;
+        padding: 6px 12px;
+    }
+
+    /* Images */
+    .img-box {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    /* Option buttons */
+    .option-btn {
+        border-radius: 12px !important;
+        padding: 10px 14px;
+    }
+</style>
+
 <div class="container mt-4">
+
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Product Details</h1>
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.ProId" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to List
+
+        <div class="d-flex gap-2">
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.ProId" class="btn-main">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            }
+
+            <a asp-action="Index" class="btn-soft">
+                <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
     </div>
 
     <div class="row">
+        <!-- LEFT -->
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-box"></i> Product Information</h5>
+
+            <!-- Info -->
+            <div class="card-soft mb-4">
+                <div class="card-soft-header">
+                    <i class="fas fa-box"></i> Product Information
                 </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-3">Product Name</dt>
+                <div class="p-4">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Name</dt>
                         <dd class="col-sm-9">@Model.ProName</dd>
 
                         <dt class="col-sm-3">Slug</dt>
@@ -35,338 +135,150 @@
                         <dd class="col-sm-9">@Model.ProDescription</dd>
 
                         <dt class="col-sm-3">Price</dt>
-                        <dd class="col-sm-9"><strong class="text-success">$@Model.Price.ToString("F2")</strong></dd>
+                        <dd class="col-sm-9"><strong>$@Model.Price.ToString("F2")</strong></dd>
 
                         <dt class="col-sm-3">Category</dt>
                         <dd class="col-sm-9">
-                            <span class="badge badge-info">@Model.Category?.CategName</span>
+                            <span class="badge-soft">@Model.Category?.CategName</span>
                         </dd>
 
                         <dt class="col-sm-3">Featured</dt>
                         <dd class="col-sm-9">
                             @if (Model.isfeatured)
                             {
-                                <span class="badge badge-success"><i class="fas fa-star"></i> Yes</span>
+                                <span class="badge-main"><i class="fas fa-star"></i> Yes</span>
                             }
                             else
                             {
-                                <span class="badge badge-secondary">No</span>
+                                <span class="badge-soft">No</span>
                             }
                         </dd>
 
-                        <dt class="col-sm-3">Created At</dt>
-                        <dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</dd>
+                        <dt class="col-sm-3">Created</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
                     </dl>
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-images"></i> Product Images (@Model.ProductImages?.Count() ?? 0)</h5>
-                    <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="btn btn-sm btn-light">
-                        <i class="fas fa-cog"></i> Manage Images
-                    </a>
-                </div>
-                <div class="card-body">
-                    @if (Model.ProductImages != null && Model.ProductImages.Any())
+            <!-- Images -->
+            <div class="card-soft mb-4">
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="card-soft-header d-flex justify-content-between">
+                        <span><i class="fas fa-images"></i> Images</span>
+                        <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="btn btn-light btn-sm">Manage</a>
+                    </div>
+                }
+                <div class="p-4">
+                    @if (Model.ProductImages?.Any() == true)
                     {
                         <div class="row">
                             @foreach (var img in Model.ProductImages)
                             {
                                 <div class="col-md-3 mb-3">
-                                    <img src="@Url.Action("GetImage", "ProductImg", new { id = img.ImgId })"
-                                         alt="@img.Alt"
-                                         class="img-fluid rounded border"
-                                         style="width: 100%; height: 150px; object-fit: cover;" />
-                                    <small class="text-muted d-block mt-1">@img.Alt</small>
+                                    <div class="img-box">
+                                        <img src="@Url.Action("GetImage", "ProductImg", new { id = img.ImgId })"
+                                             style="width:100%;height:150px;object-fit:cover;" />
+                                    </div>
                                 </div>
                             }
                         </div>
                     }
                     else
                     {
-                        <p class="text-muted text-center">No images uploaded yet. <a asp-action="ManageImages" asp-route-id="@Model.ProId">Upload images</a></p>
+                        <p class="text-muted text-center">No images uploaded</p>
                     }
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-cog"></i> Product Options (@Model.ProductOptions?.Count() ?? 0)</h5>
-                    <a asp-action="ManageOptions" asp-route-id="@Model.ProId" class="btn btn-sm btn-light">
-                        <i class="fas fa-plus"></i> Manage Options
-                    </a>
+            <!-- Add to Cart -->
+            <div class="card-soft">
+                <div class="card-soft-header">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
                 </div>
-                <div class="card-body">
-                    @if (Model.ProductOptions != null && Model.ProductOptions.Any())
+                <div class="p-4">
+                    @if (Model.ProductOptions?.Any() == true)
                     {
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Attribute</th>
-                                        <th>Value</th>
-                                        <th>Stock</th>
-                                        <th>Images</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var option in Model.ProductOptions)
+                        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                            @Html.AntiForgeryToken()
+
+                            @foreach (var group in Model.ProductOptions.GroupBy(o => o.AttributeName))
+                            {
+                                <label class="fw-bold">@group.Key</label>
+                                <div class="mb-3 d-flex flex-wrap">
+                                    @foreach (var opt in group)
                                     {
-                                        <tr>
-                                            <td><strong>@option.AttributeName</strong></td>
-                                            <td>@option.AttributeValue</td>
-                                            <td>
-                                                @if (option.StockQuantity > 0)
-                                                {
-                                                    <span class="badge badge-success">@option.StockQuantity in stock</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge badge-danger">Out of stock</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (option.ImageMaps != null && option.ImageMaps.Any())
-                                                {
-                                                    <div class="d-flex">
-                                                        @foreach (var map in option.ImageMaps.Take(3))
-                                                        {
-                                                            <img src="@Url.Action("GetImage", "ProductImg", new { id = map.ImgId })"
-                                                                 alt=""
-                                                                 style="width: 40px; height: 40px; object-fit: cover; margin-right: 5px;"
-                                                                 class="rounded border" />
-                                                        }
-                                                        @if (option.ImageMaps.Count() > 3)
-                                                        {
-                                                            <span class="badge badge-secondary align-self-center">+@(option.ImageMaps.Count() - 3)</span>
-                                                        }
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">No images</span>
-                                                }
-                                            </td>
-                                        </tr>
+                                        <label class="btn btn-outline-secondary option-btn m-1 @(opt.StockQuantity == 0 ? "disabled" : "")">
+                                            <input type="radio" name="optionId" value="@opt.OptionId" required
+                                                   data-stock="@opt.StockQuantity" onchange="updateStockInfo(this)">
+                                            @opt.AttributeValue
+                                        </label>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <label>Quantity</label>
+                                <input type="number" id="quantity" name="quantity" class="form-control"
+                                       value="1" min="1" max="999">
+                                <small id="stock-info" class="text-muted"></small>
+                            </div>
+
+                            <button id="add-to-cart-btn" class="btn-main w-100">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
                     }
                     else
                     {
-                        <p class="text-muted text-center">No options created yet. <a asp-action="ManageOptions" asp-route-id="@Model.ProId">Create options</a></p>
+                        <div class="alert alert-warning">No options available</div>
                     }
                 </div>
             </div>
         </div>
 
+        <!-- RIGHT -->
         <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-warning">
-                    <h5 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h5>
+            <div class="card-soft mb-4">
+                <div class="card-soft-header">
+                    <i class="fas fa-tools"></i> Quick Actions
                 </div>
                 <div class="list-group list-group-flush">
-                    <a asp-action="Edit" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
-                        <i class="fas fa-edit"></i> Edit Product Details
-                    </a>
-                    <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
-                        <i class="fas fa-images"></i> Manage Images
-                    </a>
-                    <a asp-action="ManageOptions" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action">
-                        <i class="fas fa-cog"></i> Manage Options
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@Model.ProId" class="list-group-item list-group-item-action text-danger">
-                        <i class="fas fa-trash"></i> Delete Product
-                    </a>
+                    <a asp-action="Edit" asp-route-id="@Model.ProId" class="list-group-item">Edit Product</a>
+                    <a asp-action="ManageImages" asp-route-id="@Model.ProId" class="list-group-item">Manage Images</a>
+                    <a asp-action="ManageOptions" asp-route-id="@Model.ProId" class="list-group-item">Manage Options</a>
+                    <a asp-action="Delete" asp-route-id="@Model.ProId" class="list-group-item text-danger">Delete</a>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistics</h5>
+            <div class="card-soft">
+                <div class="card-soft-header">
+                    <i class="fas fa-chart-bar"></i> Statistics
                 </div>
-                <div class="card-body">
-                    <p><strong>Total Images:</strong> @(Model.ProductImages?.Count() ?? 0)</p>
-                    <p><strong>Total Options:</strong> @(Model.ProductOptions?.Count() ?? 0)</p>
-                    <p><strong>Total Stock:</strong> @(Model.ProductOptions?.Sum(o => o.StockQuantity) ?? 0) units</p>
+                <div class="p-4">
+                    <p><strong>Images:</strong> @(Model.ProductImages?.Count() ?? 0)</p>
+                    <p><strong>Options:</strong> @(Model.ProductOptions?.Count() ?? 0)</p>
+                    <p><strong>Stock:</strong> @(Model.ProductOptions?.Sum(o => o.StockQuantity) ?? 0)</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    function updateStockInfo(radio) {
+        const stock = parseInt(radio.dataset.stock);
+        const info = document.getElementById('stock-info');
+        const qty = document.getElementById('quantity');
+        const btn = document.getElementById('add-to-cart-btn');
 
-<!-- Add to Cart Section for Product Details Page -->
-<div class="card">
-    <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Add to Cart</h5>
-    </div>
-    <div class="card-body">
-        @if (Model.ProductOptions != null && Model.ProductOptions.Any())
-        {
-            <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                @Html.AntiForgeryToken()
-                
-                <!-- Option Selection -->
-                <div class="form-group">
-                    <label><strong>Select Option:</strong></label>
-                    @foreach (var optionGroup in Model.ProductOptions.GroupBy(o => o.AttributeName))
-                    {
-                        <div class="mb-3">
-                            <label class="small text-muted">@optionGroup.Key:</label>
-                            <div class="btn-group-toggle d-flex flex-wrap" data-toggle="buttons">
-                                @foreach (var option in optionGroup)
-                                {
-                                    var isOutOfStock = option.StockQuantity == 0;
-                                    var isLowStock = option.StockQuantity > 0 && option.StockQuantity < 5;
-                                    
-                                    <label class="btn btn-outline-primary m-1 @(isOutOfStock ? "disabled" : "")" 
-                                           style="min-width: 80px;">
-                                        <input type="radio" 
-                                               name="optionId" 
-                                               value="@option.OptionId" 
-                                               required
-                                               @(isOutOfStock ? "disabled" : "")
-                                               data-stock="@option.StockQuantity"
-                                               onchange="updateStockInfo(this)" />
-                                        @option.AttributeValue
-                                        @if (isLowStock)
-                                        {
-                                            <br /><small class="text-warning">(@option.StockQuantity left)</small>
-                                        }
-                                        else if (isOutOfStock)
-                                        {
-                                            <br /><small class="text-danger">(Out of stock)</small>
-                                        }
-                                    </label>
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Quantity Selection -->
-                <div class="form-group">
-                    <label><strong>Quantity:</strong></label>
-                    <div class="input-group" style="max-width: 150px;">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onclick="decreaseQty()">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="number" 
-                               name="quantity" 
-                               id="quantity" 
-                               class="form-control text-center" 
-                               value="1" 
-                               min="1" 
-                               max="999" 
-                               required />
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="increaseQty()">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <small class="text-muted" id="stock-info">Select an option to see availability</small>
-                </div>
-
-                <!-- Add to Cart Button -->
-                <button type="submit" class="btn btn-success btn-block btn-lg" id="add-to-cart-btn">
-                    <i class="fas fa-cart-plus"></i> Add to Cart
-                </button>
-
-                <!-- Additional Info -->
-                <div class="mt-3">
-                    <small class="text-muted">
-                        <i class="fas fa-truck"></i> Free shipping on orders over $50<br />
-                        <i class="fas fa-shield-alt"></i> Secure checkout<br />
-                        <i class="fas fa-undo"></i> 30-day return policy
-                    </small>
-                </div>
-            </form>
+        if (stock <= 0) {
+            info.innerHTML = '<span class="text-danger">Out of stock</span>';
+            btn.disabled = true;
+        } else {
+            info.innerHTML = `<span class="text-success">${stock} available</span>`;
+            qty.max = stock;
+            btn.disabled = false;
         }
-        else
-        {
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i> No options available for this product.
-            </div>
-        }
-    </div>
-</div>
-
-<!-- Mini Cart Widget (Optional - shows in navbar) -->
-<div class="dropdown-menu dropdown-menu-right p-3" style="min-width: 300px;" id="mini-cart">
-    <h6 class="dropdown-header">Shopping Cart</h6>
-    <div id="mini-cart-items">
-        <!-- Populated via AJAX -->
-    </div>
-    <div class="dropdown-divider"></div>
-    <a asp-controller="Cart" asp-action="Index" class="btn btn-primary btn-block">
-        <i class="fas fa-shopping-cart"></i> View Cart
-    </a>
-</div>
-
-
-    <script>
-        function updateStockInfo(radio) {
-            const stock = parseInt(radio.dataset.stock);
-            const stockInfo = document.getElementById('stock-info');
-            const qtyInput = document.getElementById('quantity');
-            const addToCartBtn = document.getElementById('add-to-cart-btn');
-            
-            if (stock === 0) {
-                stockInfo.innerHTML = '<span class="text-danger">Out of stock</span>';
-                addToCartBtn.disabled = true;
-                qtyInput.disabled = true;
-            } else if (stock < 5) {
-                stockInfo.innerHTML = `<span class="text-warning">Only ${stock} available</span>`;
-                addToCartBtn.disabled = false;
-                qtyInput.disabled = false;
-                qtyInput.max = stock;
-                if (parseInt(qtyInput.value) > stock) {
-                    qtyInput.value = stock;
-                }
-            } else {
-                stockInfo.innerHTML = `<span class="text-success">${stock} available</span>`;
-                addToCartBtn.disabled = false;
-                qtyInput.disabled = false;
-                qtyInput.max = stock;
-            }
-        }
-
-        function decreaseQty() {
-            const input = document.getElementById('quantity');
-            const currentValue = parseInt(input.value);
-            if (currentValue > 1) {
-                input.value = currentValue - 1;
-            }
-        }
-
-        function increaseQty() {
-            const input = document.getElementById('quantity');
-            const currentValue = parseInt(input.value);
-            const max = parseInt(input.max);
-            if (currentValue < max) {
-                input.value = currentValue + 1;
-            }
-        }
-
-        // Load cart count on page load
-        $(document).ready(function() {
-            updateCartBadge();
-        });
-
-        function updateCartBadge() {
-            $.get('@Url.Action("GetCartCount", "Cart")', function(data) {
-                $('#cart-badge').text(data.count);
-                if (data.count > 0) {
-                    $('#cart-badge').removeClass('d-none');
-                } else {
-                    $('#cart-badge').addClass('d-none');
-                }
-            });
-        }
-    </script>
+    }
+</script>
