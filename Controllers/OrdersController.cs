@@ -49,6 +49,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Orders/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
@@ -60,6 +61,7 @@ namespace Glowry.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("OrderId,AppUserId,Date,Status")] Order order)
         {
             if (ModelState.IsValid)
@@ -73,6 +75,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Orders/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,6 +97,7 @@ namespace Glowry.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,AppUserId,Date,Status")] Order order)
         {
             if (id != order.OrderId)
@@ -126,6 +130,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Orders/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,6 +152,7 @@ namespace Glowry.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -167,6 +173,7 @@ namespace Glowry.Controllers
         //customized
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetUserOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -182,6 +189,7 @@ namespace Glowry.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetUserOrderDetails(int id)
         {
             if (id == null)

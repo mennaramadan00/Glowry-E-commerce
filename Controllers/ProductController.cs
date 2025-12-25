@@ -1,5 +1,6 @@
 ﻿using Glowry.Data;
 using Glowry.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Product/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategName");
@@ -64,6 +66,7 @@ namespace Glowry.Controllers
         // POST: Product/Create
         [HttpPost]  
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ProId,ProName,ProSlug,ProDescription,Price,isfeatured,CategoryId")] Product product)
         {
             if (!ModelState.IsValid)
@@ -86,6 +89,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Product/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +106,7 @@ namespace Glowry.Controllers
         // POST: Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ProId,ProName,ProSlug,ProDescription,Price,isfeatured,CategoryId,CreatedAt")] Product product)
         {
             if (id != product.ProId)
@@ -128,6 +133,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Product/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,6 +152,7 @@ namespace Glowry.Controllers
         // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products
@@ -163,6 +170,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Product/ManageImages/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageImages(int? id)
         {
             if (id == null)
@@ -179,6 +187,7 @@ namespace Glowry.Controllers
         }
 
         // GET: Product/ManageOptions/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageOptions(int? id)
         {
             if (id == null)
