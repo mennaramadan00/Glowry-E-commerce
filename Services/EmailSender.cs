@@ -11,15 +11,15 @@ public class EmailSender : IEmailSender
         var client = new SmtpClient("smtp.gmail.com", 587)
         {
             Credentials = new NetworkCredential(
-                "mennatullahramadanabdallah@gmail.com",
-                "nuhc qesq epls sacr"
+                "",
+                ""
             ),
             EnableSsl = true
         };
 
         var mail = new MailMessage
         {
-            From = new MailAddress("mennatullahramadanabdallah@gmail.com"),
+            From = new MailAddress(""),
             Subject = subject,
             Body = htmlMessage,
             IsBodyHtml = true
